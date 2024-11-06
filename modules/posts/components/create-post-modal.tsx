@@ -8,9 +8,8 @@ import LoadingDots from "@/components/icons/loading-dots";
 import { useModal } from "../../../components/modal/provider";
 import va from "@vercel/analytics";
 import { useEffect, useState } from "react";
-import { createSite } from "../actions";
 
-export default function CreateSiteModal() {
+export default function CreatePostModal() {
   const router = useRouter();
   const modal = useModal();
 
@@ -20,25 +19,12 @@ export default function CreateSiteModal() {
 
   return (
     <form
-      action={async (data: FormData) =>
-        createSite(data).then((res: any) => {
-          if (res.error) {
-            toast.error(res.error);
-          } else {
-            va.track("Created Candidate");
-            const { id } = res;
-            router.refresh();
-            router.push(`/site/${id}`);
-            modal?.hide();
-            toast.success(`Successfully created Candidate!`);
-          }
-        })
-      }
       className="w-full rounded-md bg-white dark:bg-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700"
     >
       <div className="relative flex flex-col space-y-4 p-5 md:p-10">
-        <h2 className="font-cal text-2xl dark:text-white">Create a new Candidate</h2>
-
+      <h1 className="text-4xl font-bold mb-6 text-center text-black-600">
+        ATS Compatibility Checker 📑
+      </h1>
         <div className="flex flex-col space-y-2">
           <label
             htmlFor="name"
@@ -60,13 +46,13 @@ export default function CreateSiteModal() {
         </div>
       </div>
       <div className="flex items-center justify-end rounded-b-lg border-t border-stone-200 bg-stone-50 p-3 dark:border-stone-700 dark:bg-stone-800 md:px-10">
-        <CreateSiteFormButton />
+        <UploadFileButton />
       </div>
     </form>
   );
 }
 
-function CreateSiteFormButton() {
+function UploadFileButton() {
   const { pending } = useFormStatus();
   return (
     <button
@@ -78,7 +64,7 @@ function CreateSiteFormButton() {
       )}
       disabled={pending}
     >
-      {pending ? <LoadingDots color="#808080" /> : <p>Create Candidate</p>}
+      {pending ? <LoadingDots color="#808080" /> : <p>Upload File</p>}
     </button>
   );
 }

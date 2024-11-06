@@ -101,6 +101,67 @@ CREATE TABLE "Example" (
     CONSTRAINT "Example_pkey" PRIMARY KEY ("id")
 );
 
+CREATE TABLE "Candidate" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+    "image" TEXT DEFAULT 'https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png',
+    "imageBlurhash" TEXT DEFAULT 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC',
+
+    CONSTRAINT "Candidate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Resume" (
+    "id" SERIAL NOT NULL,
+    "Resumefilename" TEXT NOT NULL,
+    "ResumefileUrl" TEXT NOT NULL,
+    "JobDescriptionfileUrl" TEXT,
+    "JobDescription" TEXT NOT NULL,
+    "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "candidateId" INTEGER NOT NULL,
+
+    CONSTRAINT "Resume_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ATS_Score" (
+    "id" SERIAL NOT NULL,
+    "score" INTEGER NOT NULL,
+    "summary" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "candidateId" INTEGER NOT NULL,
+    "resumeId" INTEGER NOT NULL,
+
+    CONSTRAINT "ATS_Score_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Generated_Resume" (
+    "id" SERIAL NOT NULL,
+    "Resumefilename" TEXT NOT NULL,
+    "ResumefileUrl" TEXT NOT NULL,
+    "JobDescription" TEXT NOT NULL,
+    "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "candidateId" INTEGER NOT NULL,
+    "resumeId" INTEGER NOT NULL,
+
+    CONSTRAINT "Generated_Resume_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Generated_ATS_Score" (
+    "id" SERIAL NOT NULL,
+    "score" INTEGER NOT NULL,
+    "summary" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "candidateId" INTEGER NOT NULL,
+    "generatedResumeId" INTEGER NOT NULL,
+
+    CONSTRAINT "Generated_ATS_Score_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -154,3 +215,27 @@ ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFE
 
 -- AddForeignKey
 ALTER TABLE "Site" ADD CONSTRAINT "Site_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Candidate" ADD CONSTRAINT "Candidate_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Resume" ADD CONSTRAINT "Resume_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ATS_Score" ADD CONSTRAINT "ATS_Score_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ATS_Score" ADD CONSTRAINT "ATS_Score_resumeId_fkey" FOREIGN KEY ("resumeId") REFERENCES "Resume"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Generated_Resume" ADD CONSTRAINT "Generated_Resume_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Generated_Resume" ADD CONSTRAINT "Generated_Resume_resumeId_fkey" FOREIGN KEY ("resumeId") REFERENCES "Resume"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Generated_ATS_Score" ADD CONSTRAINT "Generated_ATS_Score_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Generated_ATS_Score" ADD CONSTRAINT "Generated_ATS_Score_generatedResumeId_fkey" FOREIGN KEY ("generatedResumeId") REFERENCES "Generated_Resume"("id") ON DELETE CASCADE ON UPDATE CASCADE;

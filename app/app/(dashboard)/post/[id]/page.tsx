@@ -8,31 +8,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
   if (!session) {
     redirect("/login");
   }
-
-  // const data = await unstable_cache(
-  //   async () => {
-  //     const post = await prisma.post.findUnique({
-  //       where: {
-  //         id: decodeURIComponent(params.id),
-  //       },
-  //       include: {
-  //         updatedByUser: true,
-  //         user: true,
-  //         site: {
-  //           select: {
-  //             subdomain: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //     return post;
-  //   },
-  //   [`post-${decodeURIComponent(params.id)}`],
-  //   {
-  //     revalidate: 900, // 15 minutes
-  //     tags: [`post-${decodeURIComponent(params.id)}`],
-  //   },
-  // )();
   const data = await prisma.post.findUnique({
     where: {
       id: decodeURIComponent(params.id),
@@ -44,9 +19,6 @@ export default async function PostPage({ params }: { params: { id: string } }) {
         include: {
           users: { include: { user: true } },
         },
-        // select: {
-        //   subdomain: true,
-        // },
       },
     },
   });

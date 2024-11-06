@@ -31,22 +31,12 @@ const externalLinks = [
     icon: <Megaphone width={18} />,
   },
   {
-    name: "Star on GitHub",
-    href: "https://github.com/vercel/platforms",
-    icon: <Github width={18} />,
-  },
-  {
     name: "Read the guide",
     href: "https://vercel.com/guides/nextjs-multi-tenant-application",
     icon: <FileCode width={18} />,
   },
   {
-    name: "View demo site",
-    href: "https://demo.vercel.pub",
-    icon: <Layout width={18} />,
-  },
-  {
-    name: "Deploy your own",
+    name: "Read FAQ",
     href: "https://vercel.com/templates/next.js/platforms-starter-kit",
     icon: (
       <svg
@@ -80,21 +70,15 @@ export default function Nav({ children }: { children: ReactNode }) {
     if (segments[0] === "site" && id) {
       return [
         {
-          name: "Back to All Sites",
+          name: "Back to All Candidates",
           href: "/sites",
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Posts",
+          name: "Files",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
-        },
-        {
-          name: "Analytics",
-          href: `/site/${id}/analytics`,
-          isActive: segments.includes("analytics"),
-          icon: <BarChart3 width={18} />,
         },
         {
           name: "Settings",
@@ -126,15 +110,9 @@ export default function Nav({ children }: { children: ReactNode }) {
     }
     return [
       {
-        name: "Overview",
-        href: "/",
-        isActive: segments.length === 0,
-        icon: <LayoutDashboard width={18} />,
-      },
-      {
-        name: "Sites",
+        name: "Candidates",
         href: "/sites",
-        isActive: segments[0] === "sites",
+        isActive: segments[0] === "sites" || segments.length === 0,
         icon: <Globe width={18} />,
       },
       {
@@ -151,7 +129,6 @@ export default function Nav({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // hide sidebar on path change
     setShowSidebar(false);
   }, [pathname]);
 
@@ -159,7 +136,6 @@ export default function Nav({ children }: { children: ReactNode }) {
     <>
       <button
         className={`fixed z-20 ${
-          // left align for Editor, right align for other pages
           segments[0] === "post" && segments.length === 2 && !showSidebar
             ? "left-5 top-5"
             : "right-5 top-7"
@@ -175,39 +151,24 @@ export default function Nav({ children }: { children: ReactNode }) {
       >
         <div className="grid gap-2">
           <div className="flex items-center space-x-2 rounded-lg px-2 py-1.5">
-            <a
-              href="https://vercel.com/templates/next.js/platforms-starter-kit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg p-1.5 hover:bg-stone-200 dark:hover:bg-stone-700"
-            >
-              <svg
-                width="26"
-                viewBox="0 0 76 65"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-black dark:text-white"
-              >
-                <path
-                  d="M37.5274 0L75.0548 65H0L37.5274 0Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </a>
-            <div className="h-6 rotate-[30deg] border-l border-stone-400 dark:border-stone-500" />
-            <Link
-              href="/"
-              className="rounded-lg p-2 hover:bg-stone-200 dark:hover:bg-stone-700"
-            >
-              <Image
-                src="/logo.png"
-                width={24}
-                height={24}
-                alt="Logo"
-                className="dark:scale-110 dark:rounded-full dark:border dark:border-stone-400"
-              />
-            </Link>
-          </div>
+          <div className="flex items-center">
+  <Link
+    href="/"
+    className="flex items-center rounded-lg p-2 hover:bg-stone-200 dark:hover:bg-stone-700"
+  >
+    <Image
+      src="/logo.png"
+      width={24}
+      height={24}
+      alt="Logo"
+      className="dark:scale-110 dark:rounded-full dark:border dark:border-stone-400"
+    />
+    <span className="ml-2 font-semibold text-stone-700 dark:text-stone-200">
+      REIA
+    </span>
+  </Link>
+</div>
+</div>
           <div className="grid gap-1">
             {tabs.map(({ name, href, isActive, icon }) => (
               <Link

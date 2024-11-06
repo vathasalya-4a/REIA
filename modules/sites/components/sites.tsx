@@ -9,13 +9,16 @@ export default async function Sites({ limit }: { limit?: number }) {
   if (!session) {
     redirect("/login");
   }
-  const sites = await prisma.site.findMany({
+  const candidates = await prisma.candidate.findMany({
     where: {
-      users: {
-        some: {
-          userId: session.user.id,
-        },
-      },
+      userId: session.user.id, // Updated to match the `userId` foreign key
+    },
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      imageBlurhash: true,
+      createdAt: true,
     },
     orderBy: {
       createdAt: "asc",
@@ -23,23 +26,17 @@ export default async function Sites({ limit }: { limit?: number }) {
     ...(limit ? { take: limit } : {}),
   });
 
-  return sites.length > 0 ? (
+  return candidates.length > 0 ? (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {sites.map((site) => (
-        <SiteCard key={site.id} data={site} />
+      {candidates.map((candidate) => (
+        <SiteCard key={candidate.id} data={candidate} />
       ))}
     </div>
   ) : (
     <div className="mt-20 flex flex-col items-center space-x-4">
-      <h1 className="font-cal text-4xl">No Sites Yet</h1>
-      <Image
-        alt="missing site"
-        src="https://illustrations.popsy.co/gray/web-design.svg"
-        width={400}
-        height={400}
-      />
+      <h1 className="font-cal text-4xl">No Candidates Yet</h1>
       <p className="text-lg text-stone-500">
-        You do not have any sites yet. Create one to get started.
+        You do not have any Candidates yet. Create one to get started.
       </p>
     </div>
   );

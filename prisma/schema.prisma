@@ -27,6 +27,7 @@ model User {
   posts               Post[]     @relation(name: "createdByUser")
   postsUpdatedByUsers Post[]     @relation(name: "updatedByUser")
   sites               SiteUser[]
+  candidates          Candidate[]
 }
 
 model Account {
@@ -154,4 +155,69 @@ model Example {
   url           String?
   image         String? @db.Text
   imageBlurhash String? @db.Text
+}
+
+
+model Candidate {
+  id                 Int                   @id @default(autoincrement())
+  name               String
+  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
+  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
+  createdAt          DateTime              @default(now())
+  atsScores          ATS_Score[]
+  generatedATSScores Generated_ATS_Score[]
+  generatedResumes   Generated_Resume[]
+  resumes            Resume[]
+  userId    String      // Foreign key to User
+  user      User        @relation(fields: [userId], references: [id])
+}
+
+
+model Resume {
+  id                    Int                @id @default(autoincrement())
+  Resumefilename        String
+  ResumefileUrl         String
+  JobDescriptionfileUrl String?
+  JobDescription        String
+  uploadedAt            DateTime           @default(now())
+  candidateId           Int
+  atsScores             ATS_Score[]        // Remove fields, references, and onDelete here
+  generatedResumes      Generated_Resume[]
+  candidate             Candidate          @relation(fields: [candidateId], references: [id])
+}
+
+model ATS_Score {
+  id          Int       @id @default(autoincrement())
+  score       Int
+  summary     String
+  createdAt   DateTime  @default(now())
+  candidateId Int
+  resumeId    Int
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade) // Specify onDelete here
+}
+
+
+model Generated_Resume {
+  id                 Int                   @id @default(autoincrement())
+  Resumefilename     String
+  ResumefileUrl      String
+  JobDescription     String
+  uploadedAt         DateTime              @default(now())
+  candidateId        Int
+  resumeId           Int
+  generatedATSScores Generated_ATS_Score[] // Remove fields, references, and onDelete here
+  candidate          Candidate             @relation(fields: [candidateId], references: [id])
+  resume             Resume                @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+}
+
+model Generated_ATS_Score {
+  id                Int              @id @default(autoincrement())
+  score             Int
+  summary           String
+  createdAt         DateTime         @default(now())
+  candidateId       Int
+  generatedResumeId Int
+  candidate         Candidate        @relation(fields: [candidateId], references: [id])
+  generatedResume   Generated_Resume @relation(fields: [generatedResumeId], references: [id], onDelete: Cascade) // Specify onDelete here
 }

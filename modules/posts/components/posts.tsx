@@ -18,8 +18,6 @@ export default async function Posts({
   const posts = await prisma.post.findMany({
     where: {
       siteId,
-      // userId: session.user.id as string,
-      // ...(siteId ? { siteId } : {}),
     },
     orderBy: {
       updatedAt: "desc",
@@ -47,15 +45,9 @@ export default async function Posts({
     </div>
   ) : (
     <div className="flex flex-col items-center space-x-4">
-      <h1 className="font-cal text-4xl">No Posts Yet</h1>
-      <Image
-        alt="missing post"
-        src="https://illustrations.popsy.co/gray/graphic-design.svg"
-        width={400}
-        height={400}
-      />
+      <h1 className="font-cal text-4xl">No Files Yet</h1>
       <p className="text-lg text-stone-500">
-        You do not have any posts yet. Create one to get started.
+        You do not have any Files uploaded yet. Upload one to get started.
       </p>
     </div>
   );
