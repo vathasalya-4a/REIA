@@ -22,6 +22,7 @@ export default async function middleware(req: NextRequest) {
   }`;
 
   // rewrites for app pages
+  if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` || hostname == 'localhost:3000' ) {
     const session = await getToken({ req });
     if (!session && path !== "/login") {
       return NextResponse.redirect(new URL("/login", req.url));
@@ -31,6 +32,7 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.rewrite(
       new URL(`/app${path === "/" ? "" : path}`, req.url),
     );
+  }
 
   // rewrite everything else to `/[domain]/[slug] dynamic route
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
