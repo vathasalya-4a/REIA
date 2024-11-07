@@ -19,6 +19,7 @@ export default async function Sites({ limit }: { limit?: number }) {
       image: true,
       imageBlurhash: true,
       createdAt: true,
+      userId: true
     },
     orderBy: {
       createdAt: "asc",
