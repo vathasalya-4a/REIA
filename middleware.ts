@@ -22,7 +22,7 @@ export default async function middleware(req: NextRequest) {
   }`;
 
   // rewrites for app pages
-  if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` || hostname == 'localhost:3000' ) {
+  if (hostname == 'https://reia-production.up.railway.app/' || hostname == 'localhost:3000' ) {
     const session = await getToken({ req });
     if (!session && path !== "/login") {
       return NextResponse.redirect(new URL("/login", req.url));
