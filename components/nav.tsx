@@ -75,7 +75,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Files",
+          name: "Resumes",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
@@ -90,7 +90,7 @@ export default function Nav({ children }: { children: ReactNode }) {
     } else if (segments[0] === "post" && id) {
       return [
         {
-          name: "Back to All Posts",
+          name: "Back to All Resumes",
           href: siteId ? `/site/${siteId}` : "/sites",
           icon: <ArrowLeft width={18} />,
         },
