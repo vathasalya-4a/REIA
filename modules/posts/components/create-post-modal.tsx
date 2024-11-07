@@ -22,9 +22,6 @@ export default function CreatePostModal() {
       className="w-full rounded-md bg-white dark:bg-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700"
     >
       <div className="relative flex flex-col space-y-4 p-5 md:p-10">
-      <h1 className="text-4xl font-bold mb-6 text-center text-black-600">
-        ATS Compatibility Checker 📑
-      </h1>
         <div className="flex flex-col space-y-2">
           <label
             htmlFor="name"
@@ -64,7 +61,7 @@ function UploadFileButton() {
       )}
       disabled={pending}
     >
-      {pending ? <LoadingDots color="#808080" /> : <p>Upload File</p>}
+      {pending ? <LoadingDots color="#808080" /> : <p>Upload Resume</p>}
     </button>
   );
 }

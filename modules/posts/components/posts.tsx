@@ -45,9 +45,9 @@ export default async function Posts({
     </div>
   ) : (
     <div className="flex flex-col items-center space-x-4">
-      <h1 className="font-cal text-4xl">No Files Yet</h1>
+      <h1 className="font-cal text-4xl">No Resumes Yet</h1>
       <p className="text-lg text-stone-500">
-        You do not have any Files uploaded yet. Upload one to get started.
+        You do not have any Resumes uploaded yet. Upload one to get started.
       </p>
     </div>
   );
