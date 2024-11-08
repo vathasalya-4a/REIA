@@ -46,7 +46,7 @@ export default async function middleware(req: NextRequest) {
 }
 
   if (
-    hostname === "localhost:3000" ||
+    hostname === "localhost:8080" ||
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
     return NextResponse.rewrite(
