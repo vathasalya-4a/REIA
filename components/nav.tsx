@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   BarChart3,
   Edit3,
+  UploadCloudIcon,
   FileCode,
   Github,
   Globe,
@@ -67,7 +68,22 @@ export default function Nav({ children }: { children: ReactNode }) {
   }, [id]);
 
   const tabs = useMemo(() => {
-    if (segments[0] === "site" && id) {
+    if (segments[0] === "site" && id && segments[2] === "checkats") {
+      return [
+        {
+          name: "Back to All Resumes",
+          href: `/site/${id}`,
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Upload Resume",
+          href: `/site/${id}/checkats`,
+          isActive: segments[2] === "checkats",
+          icon: <UploadCloudIcon width={18} />,
+        }
+      ];
+    }
+    else if (segments[0] === "site" && id) {
       return [
         {
           name: "Back to All Candidates",
@@ -87,7 +103,8 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
         },
       ];
-    } else if (segments[0] === "post" && id) {
+    } 
+    else if (segments[0] === "post" && id) {
       return [
         {
           name: "Back to All Resumes",

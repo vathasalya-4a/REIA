@@ -11,23 +11,27 @@ import { deleteSite } from "../actions";
 export default function DeleteSiteForm({ siteName }: { siteName: string }) {
   const { id } = useParams() as { id: string };
   const router = useRouter();
+
   return (
     <form
-      action={async (data: FormData) =>
-        window.confirm("Are you sure you want to delete your site?") &&
-        deleteSite(id, data, "delete")
-          .then(async (res: any) => {
-            if (res.error) {
-              toast.error(res.error);
-            } else {
-              va.track("Deleted Site");
-              router.refresh();
-              router.push("/sites");
-              toast.success(`Successfully deleted site!`);
-            }
-          })
-          .catch((err: Error) => toast.error(err.message))
-      }
+      action={async (data: FormData) => {
+        if (window.confirm("Are you sure you want to delete your site?")) {
+          await deleteSite(id, data, "delete")
+            .then(async (res: any) => {
+              if (res.error) {
+                toast.error(res.error);
+              } else {
+                va.track("Deleted Site");
+                router.refresh();
+                router.push("/sites");
+                toast.success(`Successfully deleted site!`);
+              }
+            })
+            .catch((err: Error) => toast.error(err.message));
+        }
+        // Explicitly returning void
+        return;
+      }}
       className="rounded-lg border border-red-600 bg-white dark:bg-black"
     >
       <div className="relative flex flex-col space-y-4 p-5 sm:p-10">

@@ -1,7 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { AcceptInviteModal } from "@/modules/people/components/accept-invite-modal";
 import CreatePostButton from "@/modules/posts/components/create-post-button";
-import CreatePostModal from "@/modules/posts/components/create-post-modal";
 import Posts from "@/modules/posts/components/posts";
 import prisma from "@/prisma";
 import { notFound, redirect } from "next/navigation";
@@ -42,9 +41,7 @@ export default async function SitePosts({
                 All Resumes for {data.name}
               </h1> 
             </div>
-            <CreatePostButton>
-            <CreatePostModal />
-          </CreatePostButton>
+            <CreatePostButton />
           </div>
           <Posts siteId={params.id} />
         </>
