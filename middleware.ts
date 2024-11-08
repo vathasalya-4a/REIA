@@ -13,13 +13,11 @@ export default async function middleware(req: NextRequest) {
   console.log("Request URL:", url);
 
   // Determine the hostname, accommodating both localhost and production domains
-  const requestHostname = req.headers.get("host")!;
-  const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN || "localhost";
-  const resolvedHostname = requestHostname.replace("localhost", rootDomain);
+  let hostname = req.headers
+    .get("host")!
+    .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   
-  console.log("Resolved Hostname:", resolvedHostname);
-  console.log(rootDomain)
-  console.log(`app.${rootDomain}`)
+  console.log(hostname);
 
   // Construct the path with search parameters
   const searchParams = req.nextUrl.searchParams.toString();
@@ -32,7 +30,7 @@ export default async function middleware(req: NextRequest) {
   console.log("Path:", path);
 
   // Middleware logic for different environments
-  if (resolvedHostname === `app.${rootDomain}`) {
+  if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     // Redirect to /auth/login if not authenticated
     if (!session && path !== "/login") {
       return NextResponse.redirect(new URL("/login", req.url));
@@ -48,8 +46,13 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL(`/app${path === "/" ? "" : path}`, req.url));
   }
 
-  if (resolvedHostname === rootDomain) {
-    return NextResponse.rewrite(new URL(`/home${path === "/" ? "" : path}`, req.url));
+  if (
+    hostname === "localhost:3000" ||
+    hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
+  ) {
+    return NextResponse.rewrite(
+      new URL(`/home${path === "/" ? "" : path}`, req.url),
+    );
   }
 
   // Default rewrite for remaining paths
