@@ -18,6 +18,8 @@ export default async function middleware(req: NextRequest) {
   const resolvedHostname = requestHostname.replace("localhost", rootDomain);
   
   console.log("Resolved Hostname:", resolvedHostname);
+  console.log(rootDomain)
+  console.log(`app.${rootDomain}`)
 
   // Construct the path with search parameters
   const searchParams = req.nextUrl.searchParams.toString();
