@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+
 export const config = {
   matcher: [
     "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
@@ -8,25 +9,40 @@ export const config = {
 };
 
 export default async function middleware(req: NextRequest) {
+  const url = req.nextUrl;
+
+  let hostname = req.headers.get("host")!;
+  const searchParams = req.nextUrl.searchParams.toString();
+  const path = `${url.pathname}${searchParams.length > 0 ? `?${searchParams}` : ""}`;
   const session = await getToken({ req });
-  const { pathname } = req.nextUrl;
 
-  // Debugging to verify session state
-  // console.log("Session:", session);
-  // console.log("Pathname:", pathname);
-
-  // Redirect unauthenticated users trying to access protected routes to /login
-  if (!session && pathname.startsWith("/sites")) {
-    console.log("Redirecting to /login due to missing session.");
-    return NextResponse.redirect(new URL("/login", req.url));
+  console.log(url);
+  console.log(hostname);
+  
+  if (process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
+    hostname = hostname.replace("localhost:3000", `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   }
 
-  // Redirect authenticated users trying to access /login to /sites
-  if (session && pathname === "/login") {
-    console.log("Redirecting to /sites because session exists.");
-    return NextResponse.redirect(new URL("/sites", req.url));
-  }
+  console.log(hostname);
+  console.log(session);
+  console.log(path);
 
-  // Allow request if no redirection is needed
-  return NextResponse.next();
+  if (hostname === "localhost:3000" || hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN) {
+    // Allow unauthenticated access to /login and /register
+    if (!session && path !== "/login" && path !== "/register") {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+  
+    // Redirect authenticated users from /login and /register to home
+    if (session && (path === "/login" || path === "/register")) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  
+    // Ensure authenticated users go to home if accessing /
+    if (session && path === "/") {
+      return NextResponse.rewrite(new URL("/", req.url));
+    }
+  }
+  
+  return NextResponse.rewrite(url);
 }
