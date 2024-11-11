@@ -25,6 +25,9 @@ export const createPost = withSiteAuth(async (site: Site) => {
   const session = await getSession();
   if (!session?.user.id) {
     throw new Error("Not authenticated");
+    // return {
+    //   error: "Not authenticated",
+    // };
   }
   const response = await prisma.post.create({
     data: {

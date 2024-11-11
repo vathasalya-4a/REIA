@@ -37,6 +37,11 @@ export function withSiteAuthOld(action: (site: Site, ...args: any) => any) {
   };
 }
 
+// type SiteAuthReturn = {
+//   site: Site;
+//   formData: FormData | null;
+//   key: string | null;
+// };
 export function withSiteAuth(
   action: (site: Site, ...args: any) => Promise<Site | Post>,
 ) {
@@ -50,6 +55,10 @@ export function withSiteAuth(
     const session = await getSession();
     if (!session) {
       throw new HttpError("Not authenticated", 401);
+      // return {
+      //   error: "Not authenticated",
+      //   status: 401,
+      // };
     }
 
     const site = await prisma.site.findUnique({
@@ -67,6 +76,7 @@ export function withSiteAuth(
     });
 
     if (site) {
+      // site exists but user is not part of it
       if (site.users && site.users.length === 0) {
         const pendingInvites = await prisma.siteInvite.findUnique({
           where: {
@@ -81,14 +91,30 @@ export function withSiteAuth(
         });
         if (!pendingInvites) {
           throw new HttpError("Site not found", 404);
+          // return {
+          //   error: "Site not found",
+          //   status: 404,
+          // };
         } else if (pendingInvites.expires < new Date()) {
           throw new HttpError("Site invite expired.", 410);
+          // return {
+          //   error: "Site invite expired.",
+          //   status: 410,
+          // };
         } else {
           throw new HttpError("Site invite pending.", 409);
+          // return {
+          //   error: "Site invite pending.",
+          //   status: 409,
+          // };
         }
       }
     } else {
       throw new HttpError("Site not found", 404);
+      // return {
+      //   error: "Site not found",
+      //   status: 404,
+      // };
     }
 
     return action(site, formData, key);

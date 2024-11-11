@@ -1,6 +1,9 @@
+
+
 import Image from "next/image";
-import LoginButton from "../../../modules/auth/components/login-button";
+import LoginButton from "@/modules/auth/components/login-button";
 import { Suspense } from "react";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -27,6 +30,11 @@ export default function LoginPage() {
           <LoginButton />
         </Suspense>
       </div>
+      <p className="mt-4 text-center text-sm text-stone-600 dark:text-stone-400">
+        <Link href="/register" className="underline text-stone-600 dark:text-stone-400">
+          Don’t have an account? Sign Up
+        </Link>
+      </p>
     </div>
   );
 }

@@ -1,5 +1,5 @@
+// lib/auth.ts
 import { getServerSession, type NextAuthOptions } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/prisma";
@@ -11,40 +11,30 @@ const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
-      sendVerificationRequest({ identifier, url }) {
+      sendVerificationRequest: async ({ identifier, url }) => {
         if (process.env.NODE_ENV === "development") {
+          // Log the login link to the console for development testing
           console.log(`Login link: ${url}`);
-          return;
         } else {
-          sendEmail({
+          // In production, send an email with the login link
+          await sendEmail({
             email: identifier,
-            subject: "Your Dub Login Link",
+            subject: "Your Login Link",
             react: LoginLink({ url, email: identifier }),
           });
         }
       },
     }),
-    GitHubProvider({
-      clientId: process.env.AUTH_GITHUB_ID as string,
-      clientSecret: process.env.AUTH_GITHUB_SECRET as string,
-      profile(profile: any) {
-        return {
-          id: profile.id.toString(),
-          name: profile.name || profile.login,
-          gh_username: profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-        };
-      },
-    }),
   ],
   pages: {
-    signIn: `/login`,
-    verifyRequest: `/login`,
-    error: "/login", // Error code passed in query string as ?error=
+    signIn: "/login",
+    verifyRequest: "/login",
+    error: "/login",
   },
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+  },
   cookies: {
     sessionToken: {
       name: `${VERCEL_DEPLOYMENT ? "__Secure-" : ""}next-auth.session-token`,
@@ -52,7 +42,6 @@ export const authOptions: NextAuthOptions = {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        // When working on localhost, the cookie domain must be omitted entirely (https://stackoverflow.com/a/1188145)
         domain: VERCEL_DEPLOYMENT
           ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
           : undefined,
@@ -61,21 +50,27 @@ export const authOptions: NextAuthOptions = {
     },
   },
   callbacks: {
-    jwt: async ({ token, user }: any) => {
+    async jwt({ token, user }) {
       if (user) {
-        token.user = user;
+        token.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          username: user.username,
+        };
       }
       return token;
     },
-    session: async ({ session, token }: any) => {
+    async session({ session, token }) {
       session.user = {
         ...session.user,
         id: token.sub,
-        username: token?.user?.username || token?.user?.gh_username,
+        username: token?.user?.username
       };
       return session;
     },
   },
+  debug: true, // Enable detailed debug logs
 };
 
 export function getSession() {

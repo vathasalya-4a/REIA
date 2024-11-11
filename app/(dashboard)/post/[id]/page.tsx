@@ -4,9 +4,32 @@ import prisma from "@/prisma";
 import { notFound, redirect } from "next/navigation";
 
 export default async function PostPage({ params }: { params: { id: string } }) {
-  return (
-    <h1 className="text-4xl font-bold mb-6 text-center text-black-600">
-        ATS Compatibility Checker 📑
-      </h1>
-  )
+  const session = await getSession();
+  if (!session) {
+    redirect("/login");
+  }
+  const data = await prisma.post.findUnique({
+    where: {
+      id: decodeURIComponent(params.id),
+    },
+    include: {
+      updatedByUser: true,
+      user: true,
+      site: {
+        include: {
+          users: { include: { user: true } },
+        },
+      },
+    },
+  });
+  if (
+    !data ||
+    !data?.site?.users
+      ?.map((siteUser) => siteUser?.user.id)
+      ?.includes(session.user.id)
+  ) {
+    notFound();
+  }
+
+  return <Editor post={data} />;
 }

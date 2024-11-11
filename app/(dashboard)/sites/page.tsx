@@ -1,10 +1,12 @@
+// app/(dashboard)/sites/page.tsx
+
 import { Suspense } from "react";
 import Sites from "@/modules/sites/components/sites";
 import PlaceholderCard from "@/components/ui/placeholder-card";
 import CreateSiteButton from "@/modules/sites/components/create-site-button";
 import CreateSiteModal from "@/modules/sites/components/create-site-modal";
 
-export default function AllSites({ params }: { params: { id: string } }) {
+export default function AllSites() {
   return (
     <div className="flex max-w-screen-xl flex-col space-y-12 p-8">
       <div className="flex flex-col space-y-6">
@@ -25,8 +27,7 @@ export default function AllSites({ params }: { params: { id: string } }) {
             </div>
           }
         >
-          {/* @ts-expect-error Server Component */}
-          <Sites siteId={decodeURIComponent(params.id)} />
+          <Sites />
         </Suspense>
       </div>
     </div>

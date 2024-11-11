@@ -1,19 +1,17 @@
-
-
-
 "use client";
 
 import LoadingDots from "@/components/icons/loading-dots";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
-export default function LoginButton() {
+export default function RegisterButton() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const router = useRouter();
 
-  // Get error message added by next/auth in URL.
+  // Get error message from URL parameters (if any)
   const searchParams = useSearchParams();
   const error = searchParams?.get("error");
 
@@ -22,16 +20,36 @@ export default function LoginButton() {
     errorMessage && toast.error(errorMessage);
   }, [error]);
 
-  const handleSignIn = async () => {
+  // Function to check if user exists
+  const checkUserExists = async (email: string) => {
+    const res = await fetch("/api/check-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await res.json();
+    return data.exists;
+  };
+
+  const handleRegister = async () => {
     if (!email) {
       toast.error("Please enter an email address.");
       return;
     }
     setLoading(true);
     try {
-      await signIn("email", { email });
+      const userExists = await checkUserExists(email);
+      if (userExists) {
+        // If user exists, redirect to /sites
+        toast.success("User exists. Redirecting to your dashboard...");
+        router.push("/sites");
+      } else {
+        // If user doesn't exist, initiate sign-in/registration
+        await signIn("email", { email, callbackUrl: "/sites" });
+        toast.success("Check your email for a registration link.");
+      }
     } catch (error) {
-      toast.error("Sign-in failed. Please try again.");
+      toast.error("Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -49,7 +67,7 @@ export default function LoginButton() {
       />
       <button
         disabled={loading}
-        onClick={handleSignIn}
+        onClick={handleRegister}
         className={`${
           loading
             ? "cursor-not-allowed bg-gray-600"
@@ -68,11 +86,10 @@ export default function LoginButton() {
             >
               <path d="M1.5 4.5A2 2 0 013.5 3h17a2 2 0 012 2v14a2 2 0 01-2 2h-17a2 2 0 01-2-2v-14zm18 1H4.5a.5.5 0 00-.33.88L12 12.76l7.83-6.38a.5.5 0 00-.33-.88H3.5zM21 6.56L12 14.44 3 6.56V18.5a.5.5 0 00.5.5h17a.5.5 0 00.5-.5V6.56z" />
             </svg>
-            <p className="text-sm font-medium">Sign In with Email</p>
+            <p className="text-sm font-medium">Register with Email</p>
           </>
         )}
       </button>
     </div>
   );
-};
-
+}

@@ -1,3 +1,5 @@
+// app/(dashboard)/page.tsx
+
 "use client";
 
 import { useEffect } from "react";
@@ -7,7 +9,7 @@ export default function Overview() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to the sites page
+    // Redirect to the correct path for sites
     router.push("/sites");
   }, [router]);
 
