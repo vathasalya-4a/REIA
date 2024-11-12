@@ -9,6 +9,7 @@ import {
   Github,
   Globe,
   Layout,
+  User,
   LayoutDashboard,
   Megaphone,
   Menu,
@@ -71,7 +72,7 @@ export default function Nav({ children }: { children: ReactNode }) {
       return [
         {
           name: "Back to All Resumes",
-          href: siteId ? `/site/${siteId}` : "/sites", // Use specific site if available
+          href: `/site/${id}`,
           icon: <ArrowLeft width={18} />,
         },
         {
@@ -128,7 +129,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Candidates",
         href: "/sites",
         isActive: segments[0] === "sites" || segments.length === 0,
-        icon: <Globe width={18} />,
+        icon: <User width={18} />,
       },
       {
         name: "Settings",
