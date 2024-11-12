@@ -2,11 +2,6 @@
  * @type {import('next').NextConfig}
  */
 module.exports = {
-  experimental: {
-    serverActions: {
-      allowedOrigins: ["app.localhost:3000"],
-    },
-  },
   images: {
     remotePatterns: [
       { hostname: "public.blob.vercel-storage.com" },
@@ -20,6 +15,7 @@ module.exports = {
       { hostname: "flag.vercel.app" },
       { hostname: "illustrations.popsy.co" },
       { hostname: "api.dicebear.com" },
+      { hostname: "reia-production.up.railway.app"}
     ],
   },
 };

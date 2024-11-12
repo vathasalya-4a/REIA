@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RegisterButton from "@/modules/auth/components/register-button";
+import { Suspense } from "react";
 
 export default function RegisterPage() {
   return (
@@ -21,7 +22,9 @@ export default function RegisterPage() {
           </p>
 
           <div className="mt-4">
+          <Suspense fallback={<div>Loading...</div>}>
             <RegisterButton />
+            </Suspense>
           </div>
 
           <p className="mt-4 text-xs text-center text-gray-500">

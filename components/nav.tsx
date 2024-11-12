@@ -67,7 +67,22 @@ export default function Nav({ children }: { children: ReactNode }) {
   }, [id]);
 
   const tabs = useMemo(() => {
-    if (segments[0] === "site" && id) {
+    if (segments[0] === "site" && id && segments[2] === "checkats") {
+      return [
+        {
+          name: "Back to All Resumes",
+          href: siteId ? `/site/${siteId}` : "/sites", // Use specific site if available
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Upload Resume",
+          href: `/site/${id}/checkats`,
+          isActive: segments[2] === "checkats",
+          icon: <Edit3 width={18} />,
+        },
+      ];
+    }    
+    else if (segments[0] === "site" && id) {
       return [
         {
           name: "Back to All Candidates",
@@ -75,7 +90,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Files",
+          name: "Resumes",
           href: `/site/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,

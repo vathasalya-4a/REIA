@@ -19,10 +19,7 @@ export default async function Sites({ limit }: { limit?: number }) {
       image: true,
       imageBlurhash: true,
       createdAt: true,
-<<<<<<< HEAD
       userId: true
-=======
->>>>>>> 650753d (login and signup integrations)
     },
     orderBy: {
       createdAt: "asc",

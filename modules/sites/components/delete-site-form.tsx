@@ -11,7 +11,6 @@ import { deleteSite } from "../actions";
 export default function DeleteSiteForm({ siteName }: { siteName: string }) {
   const { id } = useParams() as { id: string };
   const router = useRouter();
-<<<<<<< HEAD
 
   return (
     <form
@@ -33,25 +32,6 @@ export default function DeleteSiteForm({ siteName }: { siteName: string }) {
         // Explicitly returning void
         return;
       }}
-=======
-  return (
-    <form
-      action={async (data: FormData) =>
-        window.confirm("Are you sure you want to delete your site?") &&
-        deleteSite(id, data, "delete")
-          .then(async (res: any) => {
-            if (res.error) {
-              toast.error(res.error);
-            } else {
-              va.track("Deleted Site");
-              router.refresh();
-              router.push("/sites");
-              toast.success(`Successfully deleted site!`);
-            }
-          })
-          .catch((err: Error) => toast.error(err.message))
-      }
->>>>>>> 650753d (login and signup integrations)
       className="rounded-lg border border-red-600 bg-white dark:bg-black"
     >
       <div className="relative flex flex-col space-y-4 p-5 sm:p-10">
