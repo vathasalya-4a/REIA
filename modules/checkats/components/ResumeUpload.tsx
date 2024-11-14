@@ -1,5 +1,5 @@
 import React from 'react';
-import { XIcon, CloudUploadIcon } from '@heroicons/react/outline';
+import {UploadCloudIcon, XIcon} from "lucide-react";
 
 interface ResumeUploadProps {
   resumeFile: File | null;
@@ -17,7 +17,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
       {!resumeFile ? 
       (
         <label className="flex items-center justify-center w-4/7 p-3 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800">
-          <CloudUploadIcon className="h-5 w-5 mr-2" aria-hidden="true" />
+          <UploadCloudIcon className="h-5 w-5 mr-2" aria-hidden="true" />
           <span>Upload Resume</span>
           <input type="file" onChange={handleResumeFileChange} className="hidden" />
         </label>

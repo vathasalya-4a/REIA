@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusIcon } from '@heroicons/react/solid';
+import { PlusIcon} from "lucide-react";
 
 interface AddCriteriaButtonProps {
   onClick: () => void;
