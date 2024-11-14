@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { XIcon } from '@heroicons/react/solid';
+import { XIcon} from "lucide-react";
 
 interface AddCriteriaModalProps {
   isOpen: boolean;

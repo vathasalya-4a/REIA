@@ -1,5 +1,5 @@
 import React from 'react';
-import { XIcon, CloudUploadIcon } from '@heroicons/react/outline';
+import { XIcon, UploadCloudIcon} from "lucide-react";
 
 interface JobDescriptionProps {
   isFileUpload: boolean;
@@ -46,7 +46,7 @@ const JobDescription: React.FC<JobDescriptionProps> = ({
             </div>
           ) : (
             <label className="flex items-center justify-center w-md p-3 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800 space-x-2">
-              <CloudUploadIcon className="h-5 w-5" aria-hidden="true" />
+              <UploadCloudIcon className="h-5 w-5" aria-hidden="true" />
               <span className="text-center">Upload Job Description</span>
               <input type="file" onChange={handleJobDescriptionFileChange} className="hidden" />
             </label>
