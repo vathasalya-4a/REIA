@@ -4,7 +4,7 @@ import { ReactElement, JSXElementConstructor } from "react";
 import { Resend } from "resend";
 import { render } from "@react-email/render";
 
-const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async ({
   email,
@@ -22,26 +22,23 @@ export const sendEmail = async ({
   marketing?: boolean;
   test?: boolean;
 }) => {
-  const text = render(react!, {
-    plainText: true,
-  });
-
-  // const html = render(react!, {
-  //   pretty: true,
-  // });
-
+  // Prepare the email object
   const mail = {
     from: marketing
       ? "X from Platforms <x@platforms.co>"
       : "Platforms <system@platforms.co>",
     to: test ? "delivered@resend.dev" : email,
     subject,
-    react,
-    text,
-    // html,
+    react,  // Pass the react component directly
   };
 
-  console.log("email", mail);
-
-  return resend.emails.send(mail);
+  try {
+    // Send the email using Resend
+    const response = await resend.emails.send(mail);
+    console.log("Email sent successfully:", response);
+    return response;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw error;
+  }
 };

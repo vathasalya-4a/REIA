@@ -1,13 +1,22 @@
 
-
+"use client";
 import Image from "next/image";
 import LoginButton from "@/modules/auth/components/login-button";
 import { Suspense } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   return (
     <div className="mx-5 border border-stone-200 py-10 dark:border-stone-700 sm:mx-auto sm:w-full sm:max-w-md sm:rounded-lg sm:shadow-md">
+      {/* Back Button */}
+      <button 
+        onClick={() => router.push("/marketing")} 
+        className="absolute top-4 left-4 text-stone-600 dark:text-stone-400 hover:underline"
+      >
+        ← Back
+      </button>
       <Image
         alt="Platforms Starter Kit"
         width={100}

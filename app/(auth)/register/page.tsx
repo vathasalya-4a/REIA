@@ -4,7 +4,14 @@ import { Suspense } from "react";
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-screen">
+    <div className="relative flex min-h-screen">
+      {/* Login Option on Top Right */}
+      <div className="absolute top-4 right-4">
+        <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-800">
+          Login
+        </Link>
+      </div>
+
       {/* Left Side - Welcome Message */}
       <div className="flex flex-col justify-center items-center w-1/2 bg-gray-100">
         <h1 className="text-3xl font-bold">Welcome to REIA</h1>
@@ -22,8 +29,8 @@ export default function RegisterPage() {
           </p>
 
           <div className="mt-4">
-          <Suspense fallback={<div>Loading...</div>}>
-            <RegisterButton />
+            <Suspense fallback={<div>Loading...</div>}>
+              <RegisterButton />
             </Suspense>
           </div>
 

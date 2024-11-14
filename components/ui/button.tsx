@@ -1,67 +1,55 @@
-"use client";
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils";
-// import { LoadingDots } from "#/ui/icons";
-// import Tooltip from "#/ui/tooltip";
-// import { cn } from "#/lib/utils";
-import { ReactNode } from "react";
-import LoadingDots from "../icons/loading-dots";
-import Tooltip from "../tooltip";
+import { cn } from "@/lib/utils"
 
-export default function Button({
-  text,
-  variant = "primary",
-  onClick,
-  disabled,
-  loading,
-  icon,
-  disabledTooltip,
-}: {
-  text: string;
-  variant?: "primary" | "secondary" | "danger";
-  onClick?: any;
-  disabled?: boolean;
-  loading?: boolean;
-  icon?: ReactNode;
-  disabledTooltip?: string | ReactNode;
-}) {
-  if (disabledTooltip) {
-    return (
-      <Tooltip content={disabledTooltip} fullWidth>
-        <div className="flex h-10 w-full cursor-not-allowed items-center justify-center rounded-md border border-gray-200 bg-gray-100 text-sm text-gray-400 transition-all focus:outline-none">
-          <p>{text}</p>
-        </div>
-      </Tooltip>
-    );
+const buttonVariants = cva(
+  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline:
+          "border border-input hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "underline-offset-4 hover:underline text-primary",
+      },
+      size: {
+        default: "h-10 py-2 px-4",
+        sm: "h-9 px-3 rounded-md",
+        lg: "h-11 px-8 rounded-md",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
   }
-  return (
-    <button
-      // if onClick is passed, it's a "button" type, otherwise it's being used in a form, hence "submit"
-      type={onClick ? "button" : "submit"}
-      className={cn(
-        "flex h-10 w-full items-center justify-center space-x-2 rounded-md border text-sm transition-all focus:outline-none",
-        disabled || loading
-          ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-          : {
-              "border-black bg-black text-white hover:bg-white hover:text-black":
-                variant === "primary",
-              "border-gray-200 bg-white text-gray-500 hover:border-black hover:text-black":
-                variant === "secondary",
-              "border-red-500 bg-red-500 text-white hover:bg-white hover:text-red-500":
-                variant === "danger",
-            },
-      )}
-      {...(onClick ? { onClick } : {})}
-      disabled={disabled || loading}
-    >
-      {loading ? (
-        <LoadingDots color="#808080" />
-      ) : (
-        <>
-          {icon}
-          <p>{text}</p>
-        </>
-      )}
-    </button>
-  );
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
 }
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
