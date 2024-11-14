@@ -20,9 +20,6 @@ export const authOptions: NextAuthOptions = {
           console.log("sending Email");
           console.log(identifier);
 
-          // Replace localhost with production environment URL
-          url = url.replace("localhost:3000", "reia-production.up.railway.app");
-
           await sendEmail({
             email: identifier,
             subject: "Your Login Link",
