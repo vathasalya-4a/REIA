@@ -10,6 +10,7 @@ import {
   Globe,
   Layout,
   User,
+  UploadCloudIcon,
   LayoutDashboard,
   Megaphone,
   Menu,
@@ -79,7 +80,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           name: "Upload Resume",
           href: `/site/${id}/checkats`,
           isActive: segments[2] === "checkats",
-          icon: <Edit3 width={18} />,
+          icon: <UploadCloudIcon width={18} />,
         },
       ];
     }    

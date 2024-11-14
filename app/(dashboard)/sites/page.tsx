@@ -1,5 +1,3 @@
-// app/(dashboard)/sites/page.tsx
-
 import { Suspense } from "react";
 import Sites from "@/modules/sites/components/sites";
 import PlaceholderCard from "@/components/ui/placeholder-card";

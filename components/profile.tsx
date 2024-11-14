@@ -14,9 +14,9 @@ export default async function Profile() {
     <div className="flex w-full items-center justify-between">
       <Link
         href="/settings"
-        className="flex w-full flex-1 items-center space-x-3 rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800"
+        className="flex w-5/6 flex-1 items-center space-x-3 rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800"
       >
-        <Avatar user={session.user} className="h-7 w-7" />
+        <Avatar user={session.user} className="h-5 w-5" />
         <span className="truncate text-sm font-medium">
           {session.user.name || session.user.email}
         </span>
