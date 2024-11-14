@@ -9,7 +9,7 @@ import {
 } from "react";
 import va from "@vercel/analytics";
 import { toast } from "sonner";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import BlurImage from "@/components/ui/blur-image";
 import Modal from "@/components/modal";
 import { useParams } from "next/navigation";
@@ -110,7 +110,8 @@ function InviteTeammateModal({
             </div>
           </div>
 
-          <Button loading={inviting} text="Send invite" />
+          <Button loading={inviting}>Send invite</Button>
+
         </form>
       </div>
     </Modal>

@@ -12,7 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import useSite from "@/lib/swr/use-site";
 import Modal from "@/components/modal";
 import BlurImage from "@/components/ui/blur-image";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { mutate } from "swr";
 import { Avatar } from "@/components/ui/avatar";
@@ -70,7 +70,6 @@ function RemoveTeammateModal({
             </div>
           </div>
           <Button
-            text="Confirm remove"
             variant="danger"
             loading={removing}
             onClick={async () => {
@@ -91,33 +90,10 @@ function RemoveTeammateModal({
                 toast.error((res as any)?.error);
               }
               setRemoving(false);
-              // await router.refresh();
-
-              // fetch(
-              //   `/api/projects/${siteId}/${
-              //     invite ? `invites?email=${email}` : `users?userId=${userId}`
-              //   }`,
-              //   {
-              //     method: "DELETE",
-              //     headers: { "Content-Type": "application/json" },
-              //   },
-              // ).then(async (res) => {
-              //   setRemoving(false);
-              //   if (res.status === 200) {
-              //     toast.success(
-              //       `${invite ? "Invite" : "User"} removed from project!`,
-              //     );
-              //     mutate(
-              //       `/api/projects/${siteId}/${invite ? "invites" : "users"}`,
-              //     );
-              //     setShowRemoveTeammateModal(false);
-              //   } else {
-              //     const error = await res.text();
-              //     toast.error(error);
-              //   }
-              // });
             }}
-          />
+          >
+            Confirm remove
+          </Button>
         </div>
       </div>
     </Modal>

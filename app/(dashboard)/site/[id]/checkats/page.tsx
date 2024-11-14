@@ -6,8 +6,8 @@ import { useToast } from "@/components/ui/use-toast";
 import ResumeUpload from "@/modules/checkats/components/ResumeUpload";
 import JobDescription from "@/modules/checkats/components/JobDescription";
 import AddCriteriaButton from "@/modules/checkats/components/AddCriteriaButton";
-import AddCriteriaModal from "@/modules/checkats/components/AddcriteriaModal";
 import EditCriteriaModal from "@/modules/checkats/components/EditCriteriaButton";
+import AddCriteriaModal from "@/modules/checkats/components/AddCriteriaModal";
 
 interface CriteriaItem {
   name: string;

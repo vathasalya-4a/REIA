@@ -18,7 +18,7 @@ import BlurImage from "@/components/ui/blur-image";
 import { getSite } from "@/modules/sites/fetchers";
 import LoadingDots from "@/components/icons/loading-dots";
 import { Avatar } from "@/components/ui/avatar";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { setRole } from "../actions/set-role";
 import { Site } from "@prisma/client";
 
@@ -142,48 +142,24 @@ function EditRoleModal({
             </div>
           </div>
           <Button
-            text="Confirm"
-            loading={editing}
-            onClick={async () => {
-              setEditing(true);
-              const res = await setRole(userId, siteId, role);
-
-              if (!(res as any)?.error) {
-                // await mutate(`/api/projects/${siteId}/users`);
-                await mutate("teammates");
-                setShowEditRoleModal(false);
-                toast.success(
-                  `Successfully changed ${name || email}'s role to ${role}.`,
-                );
-              } else {
-                toast.error((res as any)?.error);
-              }
-
-              setEditing(false);
-              // router.refresh();
-
-              // fetch(`/api/projects/${slug}/users`, {
-              //   method: "PUT",
-              //   headers: { "Content-Type": "application/json" },
-              //   body: JSON.stringify({
-              //     userId: id,
-              //     role,
-              //   }),
-              // }).then(async (res) => {
-              //   if (res.status === 200) {
-              //     await mutate(`/api/projects/${slug}/users`);
-              //     setShowEditRoleModal(false);
-              //     toast.success(
-              //       `Successfully changed ${name || email}'s role to ${role}.`,
-              //     );
-              //   } else {
-              //     const error = await res.text();
-              //     toast.error(error);
-              //   }
-              //   setEditing(false);
-              // });
-            }}
-          />
+  disabled={editing} // Disable the button if `loading`
+  onClick={async () => {
+    setEditing(true);
+    const res = await setRole(userId, siteId, role);
+    if (!(res as any)?.error) {
+      await mutate("teammates");
+      setShowEditRoleModal(false);
+      toast.success(
+        `Successfully changed ${name || email}'s role to ${role}.`
+      );
+    } else {
+      toast.error((res as any)?.error);
+    }
+    setEditing(false);
+  }}
+>
+  {editing ? <LoadingDots /> : "Confirm"}
+</Button>
         </div>
       </div>
     </Modal>
