@@ -2,7 +2,6 @@
 
 import { ReactElement, JSXElementConstructor } from "react";
 import { Resend } from "resend";
-import { render } from "@react-email/render";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -25,11 +24,11 @@ export const sendEmail = async ({
   // Prepare the email object
   const mail = {
     from: marketing
-      ? "X from Platforms <x@platforms.co>"
-      : "Platforms <system@platforms.co>",
+      ? "X from REIA <onboarding@resend.dev>"
+      : "REIA <onboarding@resend.dev>",
     to: test ? "delivered@resend.dev" : email,
     subject,
-    react,  // Pass the react component directly
+    react,
   };
 
   try {

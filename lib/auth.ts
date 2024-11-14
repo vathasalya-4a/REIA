@@ -7,16 +7,22 @@ import { sendEmail } from "@/modules/emails/actions/send-email";
 import LoginLink from "@/modules/emails/templates/login-link";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
+const environment = process.env.NODE_ENV;
+console.log(environment)
 
 export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       sendVerificationRequest: async ({ identifier, url }) => {
-        if (process.env.NODE_ENV === "development") {
-          // Log the login link to the console for development testing
+        if (environment === "development") {
           console.log(`Login link: ${url}`);
         } else {
-          // In production, send an email with the login link
+          console.log("sending Email");
+          console.log(identifier);
+
+          // Replace localhost with production environment URL
+          url = url.replace("localhost:3000", "reia-production.up.railway.app");
+
           await sendEmail({
             email: identifier,
             subject: "Your Login Link",
@@ -65,7 +71,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  debug: true, // Enable detailed debug logs
+  debug: true,
 };
 
 export function getSession() {
