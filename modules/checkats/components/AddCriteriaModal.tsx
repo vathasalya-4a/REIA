@@ -18,14 +18,14 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
 
   const criteriaOptions = [
     { label: "Select criteria", value: "" },
-    { label: "Skills Matching", value: "skills_matching" },
-    { label: "Experience", value: "experience" },
-    { label: "Education", value: "education" },
-    { label: "Keyword Usage", value: "keyword_usage" },
-    { label: "Certifications", value: "certifications" },
-    { label: "Achievements", value: "achievements" },
-    { label: "Job Stability", value: "job_stability" },
-    { label: "Cultural Fit", value: "cultural_fit" },
+    { label: "Skills Matching", value: "Skills Matching" },
+    { label: "Experience", value: "Experience" },
+    { label: "Education", value: "Education" },
+    { label: "Keyword Usage", value: "Keyword Usage" },
+    { label: "Certifications", value: "Certifications" },
+    { label: "Achievements", value: "Achievements" },
+    { label: "Job Stability", value: "Job Stability" },
+    { label: "Cultural Fit", value: "Cultural Fit" },
   ];
 
   useEffect(() => {
@@ -68,7 +68,7 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
       <div className="relative w-full max-w-md rounded-md bg-white dark:bg-black p-5 md:border md:border-stone-200 md:shadow dark:md:border-stone-700">
         <div className="relative flex flex-col space-y-4">
 
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-2">
             <h2 className="font-cal text-2xl dark:text-white">Add Criteria</h2>
             <button onClick={onClose} className="ml-4 text-black">
               <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -141,7 +141,7 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
   </div>
 )}
 
-          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400">
+          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-5">
             Total Percentage: {localTotalPercentage}%
           </div>
 

@@ -59,7 +59,7 @@ const EditCriteriaModal: React.FC<EditCriteriaModalProps> = ({
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-600 bg-opacity-60 backdrop-blur-md">
       <div className="relative w-full max-w-md rounded-md bg-white dark:bg-black p-5 md:border md:border-stone-200 md:shadow dark:md:border-stone-700">
         <div className="relative flex flex-col space-y-4">
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-2">
             <h2 className="font-cal text-2xl dark:text-white">Edit Criteria</h2>
             <button onClick={onClose} className="ml-4 text-black">
               <XIcon className="h-4 w-4" aria-hidden="true" />
@@ -92,15 +92,15 @@ const EditCriteriaModal: React.FC<EditCriteriaModalProps> = ({
             </div>
           </div>
 
-          <div className="flex justify-end mt-4 space-x-4">
+          <div className="flex justify-center mt-6 space-x-4">
             <button 
-              onClick={handleSaveChanges} 
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800">
+              onClick={handleSaveChanges}
+              className="flex items-center justify-center w-md p-3 px-6 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800">
               Edit
             </button>
           </div>
 
-          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400">
+          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-5">
             Total Percentage: {localTotalPercentage - (item?.percentage || 0) + percentage}%
           </div>
         </div>

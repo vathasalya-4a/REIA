@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from 'react';
-import { TrashIcon, ClipboardCheck, EditIcon } from "lucide-react";
+import { TrashIcon, ClipboardCheck, PencilIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import ResumeUpload from "@/modules/checkats/components/ResumeUpload";
 import JobDescription from "@/modules/checkats/components/JobDescription";
 import AddCriteriaButton from "@/modules/checkats/components/AddCriteriaButton";
 import EditCriteriaModal from "@/modules/checkats/components/EditCriteriaButton";
 import AddCriteriaModal from "@/modules/checkats/components/AddCriteriaModal";
+import LoadingDots from "@/components/icons/loading-dots";
 
 interface CriteriaItem {
   name: string;
@@ -18,6 +19,7 @@ export default function CheckATS() {
   const { toast } = useToast();
   const [resumeFile, setResumeFile] = useState(null);
   const [jobDescriptionFile, setJobDescriptionFile] = useState(null);
+  const [jobDescriptionText, setJobDescriptionText] = useState("");
   const [isFileUpload, setIsFileUpload] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editModalOpen, seteditModalOpen] = useState(false);
@@ -27,6 +29,8 @@ export default function CheckATS() {
   const [totalPercentage, setTotalPercentage] = useState(0);
   const [toastMessage, setToastMessage] = useState("");
   const [selectedCriteria, setSelectedCriteria] = useState<CriteriaItem | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleResumeFileChange = (event) => {
     const uploadedFile = event.target.files[0];
@@ -107,14 +111,38 @@ export default function CheckATS() {
     setToastMessage("");
   };
 
-  return (
-    <div className="overflow-y-auto resize-none custom-scrollbar">
+  const handleSubmit = async () => {
+    /*closeToast();
+  
+    if (!resumeFile || (!jobDescriptionText && !jobDescriptionFile)) {
+      toast({
+        description: "Please upload a resume and provide the job description.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-      <h1 className="mt-2 text-center font-cal text-3xl text-black-200">
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toast({
+        description: "Compatibility score generated successfully!",
+        variant: "default",
+      });
+    }, 2000);*/
+    console.log("Hello");
+    setToastMessage("Hello Welcome");
+    return;
+  }
+
+  return (
+    <div className="overflow-y-auto resize-none custom-scrollbar p-6">
+
+      <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
         Upload Resume and Job Description
       </h1>
 
-      <div className="mt-6 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
+      <div className="mt-8 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
         <p className="mt-2 text-sm text-gray-500 text-center">
           Accepted File types are docx and pdf
         </p>
@@ -126,57 +154,80 @@ export default function CheckATS() {
         <JobDescription
           isFileUpload={isFileUpload}
           jobDescriptionFile={jobDescriptionFile}
+          jobDescriptionText={jobDescriptionText}
+          setJobDescriptionText={setJobDescriptionText}
           setIsFileUpload={setIsFileUpload}
           handleJobDescriptionFileChange={handleJobDescriptionFileChange}
           handleRemoveJobDescriptionFile={handleRemoveJobDescriptionFile}
         />
       </div>
 
-      <div className="mt-8 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
-        <AddCriteriaButton 
-          onClick={openModal} 
-        />
-        <AddCriteriaModal 
-          isOpen={isModalOpen} 
-          onClose={closeModal} 
-          onAddCriteria={handleAddCriteria} 
-          totalPercentage={totalPercentage}
-        />
-        <EditCriteriaModal
-          isOpen={editModalOpen}
-          onClose={closeEditModal}
-          item={selectedCriteria}
-          onSave={handleEditCriteria}
-          totalPercentage={totalPercentage}
-        />
-        <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {addedCriteria.map((item, index) => (
-            <div
-              key={index}
-              className="mt-3 flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none"
-            >
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-stone-700">{item.name}</span>
-              <span className="text-xs text-stone-500">{item.percentage}%</span>
-            </div>
-            <button onClick={() => openEditModal(item)} className="ml-14">
-              <EditIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
-            </button>
-            <button onClick={() => handleDeleteCriteria(index)} className="">
-              <TrashIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
-            </button>
-            </div>
-          ))}
-        </div>
+      {resumeFile && (
+        <>
+          <div className="mt-10 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
+            <AddCriteriaButton 
+              onClick={openModal} 
+            />
+            <AddCriteriaModal 
+              isOpen={isModalOpen} 
+              onClose={closeModal} 
+              onAddCriteria={handleAddCriteria} 
+              totalPercentage={totalPercentage}
+            />
+            <EditCriteriaModal
+              isOpen={editModalOpen}
+              onClose={closeEditModal}
+              item={selectedCriteria}
+              onSave={handleEditCriteria}
+              totalPercentage={totalPercentage}
+            />
+  {addedCriteria.map((item, index) => (
+   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+    <div
+      key={index}
+      className="mt-3 flex items-center justify-between p-4 rounded-lg bg-white border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none"
+    >
+      <div className="flex flex-col">
+        <span className="text-sm font-semibold text-stone-700">{item.name}</span>
+        <span className="text-xs text-stone-500">{item.percentage}%</span>
       </div>
-
-      <div className="mt-9 flex justify-center">
-        <button className="flex items-center rounded-lg border border-black hover:shadow-xl bg-black px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-white hover:text-black active:bg-stone-100 dark:border-stone-700 dark:hover:border-stone-200 dark:hover:bg-black dark:hover:text-white dark:active:bg-stone-800">
-          <ClipboardCheck className="h-5 w-5 mr-2" aria-hidden="true" />
-          Get Compatibility Score
+      <div className="flex space-x-2">
+        <button onClick={() => openEditModal(item)} className="">
+          <PencilIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
+        </button>
+        <button onClick={() => handleDeleteCriteria(index)} className="">
+          <TrashIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
         </button>
       </div>
+    </div>
+    </div>
+  ))}
+          </div>
 
+          <div className="mt-11 flex justify-center">
+            <button 
+              disabled = {loading}
+              onClick={handleSubmit}
+              className={`${ loading ? "cursor-not-allowed bg-gray-600" : "bg-black text-white hover:bg-gray-800 active:bg-gray-900"
+              } flex items-center justify-center w-md p-3 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800`}
+              >
+              {loading ? 
+                (
+                  <div className="flex items-center">
+                    <LoadingDots color="#A8A29E" /> 
+                    <p className="ml-2 text-sm font-medium">Checking Compatibility...</p>
+                  </div>
+                ) : 
+                (
+                  <div className="flex items-center">
+                    <ClipboardCheck className="h-5 w-5 mr-2" aria-hidden="true" />
+                    <p className="text-sm font-medium">Get Compatibility Score</p>
+                  </div>
+              )}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }
