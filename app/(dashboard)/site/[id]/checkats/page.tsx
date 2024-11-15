@@ -182,28 +182,31 @@ export default function CheckATS() {
               onSave={handleEditCriteria}
               totalPercentage={totalPercentage}
             />
-  {addedCriteria.map((item, index) => (
-   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2"
-   key={index}
-   >
-    <div
-      className="mt-3 flex items-center justify-between p-4 rounded-lg bg-white border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none"
-    >
-      <div className="flex flex-col">
-        <span className="text-sm font-semibold text-stone-700">{item.name}</span>
-        <span className="text-xs text-stone-500">{item.percentage}%</span>
+ {addedCriteria.length > 0 && (
+  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-2">
+    {addedCriteria.map((item, index) => (
+      <div
+        key={index}
+        className="flex items-center justify-between p-4 rounded-lg bg-white border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none"
+      >
+        <div className="flex flex-col">
+          <span className="text-sm font-semibold text-stone-700">
+            {item.name}
+          </span>
+          <span className="text-xs text-stone-500">{item.percentage}%</span>
+        </div>
+        <div className="flex space-x-2">
+          <button onClick={() => openEditModal(item)}>
+          <PencilIcon className="h-4 w-4 text-stone-500 hover:text-black" aria-hidden="true" />
+          </button>
+          <button onClick={() => handleDeleteCriteria(index)}>
+            <TrashIcon className="h-4 w-4 text-stone-500 hover:text-black" aria-hidden="true" />
+          </button>
+        </div>
       </div>
-      <div className="flex space-x-2">
-        <button onClick={() => openEditModal(item)} className="">
-          <PencilIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
-        </button>
-        <button onClick={() => handleDeleteCriteria(index)} className="">
-          <TrashIcon className="h-4 w-4 text-stone-500" aria-hidden="true" />
-        </button>
-      </div>
-    </div>
-    </div>
-  ))}
+    ))}
+  </div>
+)}
           </div>
 
           <div className="mt-11 flex justify-center">
