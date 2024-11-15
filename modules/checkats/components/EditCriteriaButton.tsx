@@ -100,7 +100,7 @@ const EditCriteriaModal: React.FC<EditCriteriaModalProps> = ({
             </button>
           </div>
 
-          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-5">
+          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-6">
             Total Percentage: {localTotalPercentage - (item?.percentage || 0) + percentage}%
           </div>
         </div>

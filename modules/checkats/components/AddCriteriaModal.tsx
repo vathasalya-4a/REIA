@@ -6,14 +6,14 @@ interface AddCriteriaModalProps {
   onClose: () => void;
   onAddCriteria: (item: { name: string; percentage: number }) => void;
   totalPercentage: number;
+  addedCriteria: { name: string; percentage: number }[];
 }
 
-const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, onAddCriteria, totalPercentage }) => {
+const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, onAddCriteria, totalPercentage, addedCriteria }) => {
   const [criteria, setCriteria] = useState<string>('');
   const [percentage, setPercentage] = useState<number>(0);
   const [localTotalPercentage, setLocalTotalPercentage] = useState<number>(totalPercentage || 0);
   const [toastMessage, setToastMessage] = useState<string>('');
-  const [addedCriteria, setAddedCriteria] = useState<{ name: string; percentage: number }[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const criteriaOptions = [
@@ -39,7 +39,6 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
       setToastMessage('Total percentage reached. Please adjust values.');
     } else if (criteria && percentage) {
       const newCriteria = { name: criteria, percentage };
-      setAddedCriteria([...addedCriteria, newCriteria]);
       onAddCriteria(newCriteria);
       setLocalTotalPercentage((prev) => prev + percentage);
       setToastMessage('Criteria added successfully!');
@@ -57,9 +56,9 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
 
   const closeToast = () => setToastMessage('');
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+ /* const toggleDropdown = () => {
+    setIsDropdownOpen(isDropdownOpen);
+  };*/
 
   if (!isOpen) return null;
 
@@ -106,42 +105,41 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
             </div>
           </div>
 
-          <div className="flex justify-end mt-4 space-x-4">
+          <div className="flex justify-center mt-6 space-x-4">
             <button 
-              onClick={handleAddCriteria} 
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800">
+              onClick={handleAddCriteria}
+              className="flex items-center justify-center w-md p-3 px-6 bg-black text-white rounded-lg cursor-pointer hover:bg-gray-800">
               Add
             </button>
-            <button 
-              onClick={toggleDropdown} 
-              className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800">
-              View
-            </button>
           </div>
 
-          {isDropdownOpen && (
-  <div className="mt-4 border rounded-lg bg-stone-50 dark:bg-black p-3">
-    <div className="mt-1 grid grid-cols-3 gap-2">
-      {addedCriteria.length > 0 ? (
-        addedCriteria.map((item, index) => (
-          <div 
-            key={index} 
-            className="p-1 bg-white dark:bg-stone-800 rounded-lg shadow-md border border-stone-200 dark:border-stone-700"
-          >
-            <div className="flex flex-col items-center">
-              <span className="text-[10px] font-semibold text-stone-700 dark:text-stone-300">{item.name}</span>
-              <span className="text-[10px] text-stone-500 dark:text-stone-400">{item.percentage}%</span>
-            </div>
+          <div className="mt-4 border rounded-lg bg-stone-50 dark:bg-black p-3">
+  <div className="mt-1 grid grid-cols-3 gap-2">
+    {addedCriteria.length > 0 ? (
+      addedCriteria.map((item, index) => (
+        <div
+          key={index}
+          className="p-1 bg-white dark:bg-stone-800 rounded-lg shadow-md border border-stone-200 dark:border-stone-700"
+        >
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] font-semibold text-stone-700 dark:text-stone-300">
+              {item.name}
+            </span>
+            <span className="text-[10px] text-stone-500 dark:text-stone-400">
+              {item.percentage}%
+            </span>
           </div>
-        ))
-      ) : (
-        <p className="text-xs text-stone-500 dark:text-stone-400 col-span-full">No criteria added yet.</p>
-      )}
-    </div>
+        </div>
+      ))
+    ) : (
+      <p className="text-xs text-stone-500 dark:text-stone-400 col-span-full">
+        No criteria added yet.
+      </p>
+    )}
   </div>
-)}
+</div>
 
-          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-5">
+          <div className="mt-4 text-center text-sm font-medium text-stone-500 dark:text-stone-400 mb-6">
             Total Percentage: {localTotalPercentage}%
           </div>
 

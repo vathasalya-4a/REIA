@@ -173,6 +173,7 @@ export default function CheckATS() {
               onClose={closeModal} 
               onAddCriteria={handleAddCriteria} 
               totalPercentage={totalPercentage}
+              addedCriteria={addedCriteria}
             />
             <EditCriteriaModal
               isOpen={editModalOpen}
