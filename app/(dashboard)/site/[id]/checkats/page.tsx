@@ -183,9 +183,10 @@ export default function CheckATS() {
               totalPercentage={totalPercentage}
             />
   {addedCriteria.map((item, index) => (
-   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+   <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2"
+   key={index}
+   >
     <div
-      key={index}
       className="mt-3 flex items-center justify-between p-4 rounded-lg bg-white border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none"
     >
       <div className="flex flex-col">
