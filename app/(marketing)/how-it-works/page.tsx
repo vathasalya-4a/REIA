@@ -1,14 +1,37 @@
-// app/(marketing)/how-it-works/page.tsx
 import React from 'react';
 
 const HowItWorks = () => (
-  <section className="py-16 bg-black text-center">
-    <h2 className="text-3xl font-bold text-white mb-8">How It Works</h2>
-    <div className="space-y-4 text-gray-300">
-      <div>1. <strong>Create Your Account</strong> - Sign up for a free account to start using Files 24.</div>
-      <div>2. <strong>Upload Your Files</strong> - Easily upload files to your secure storage space.</div>
-      <div>3. <strong>Invite Clients & Collaborators</strong> - Share files with clients and team members securely.</div>
-      <div>4. <strong>Manage & Organize</strong> - Organize your files and monitor activities with ease.</div>
+  <section className="py-16 bg-gray-50 px-4 text-center">
+    <h2 className="text-4xl font-bold text-gray-800 mb-12">How It Works</h2>
+    <div className="space-y-8 text-gray-700 max-w-3xl mx-auto">
+      <div className="flex items-start md:items-center space-x-4 md:space-x-6">
+        <div className="flex-shrink-0 bg-black text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">1</div>
+        <div className="text-left">
+          <h3 className="text-lg font-semibold text-gray-900">Create Your Account</h3>
+          <p className="text-gray-600">Sign up to start using REIA.</p>
+        </div>
+      </div>
+      <div className="flex items-start md:items-center space-x-4 md:space-x-6">
+        <div className="flex-shrink-0 bg-black text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">2</div>
+        <div className="text-left">
+          <h3 className="text-lg font-semibold text-gray-900">Create Candidates</h3>
+          <p className="text-gray-600">Add new candidates to the platform.</p>
+        </div>
+      </div>
+      <div className="flex items-start md:items-center space-x-4 md:space-x-6">
+        <div className="flex-shrink-0 bg-black text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">3</div>
+        <div className="text-left">
+          <h3 className="text-lg font-semibold text-gray-900">Upload Resumes and Job Descriptions</h3>
+          <p className="text-gray-600">Add resumes and job descriptions for evaluation.</p>
+        </div>
+      </div>
+      <div className="flex items-start md:items-center space-x-4 md:space-x-6">
+        <div className="flex-shrink-0 bg-black text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg">4</div>
+        <div className="text-left">
+          <h3 className="text-lg font-semibold text-gray-900">Evaluate and Generate Scores</h3>
+          <p className="text-gray-600">Set criteria, get ATS scores, and generate improved resumes.</p>
+        </div>
+      </div>
     </div>
   </section>
 );

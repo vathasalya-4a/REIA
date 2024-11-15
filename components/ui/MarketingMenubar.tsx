@@ -1,29 +1,23 @@
-// components/ui/MarketingMenubar.tsx
-
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSession, signOut } from "next-auth/react";
-import {
-  Menubar,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
+import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
 
 export default function MarketingMenubar() {
   const { data: session } = useSession(); // Access session info
   const isLoggedIn = Boolean(session);
 
   return (
-    <Menubar className="flex items-center justify-between bg-white shadow px-4 py-4 w-full">
+    <Menubar className="flex items-center justify-between bg-white px-8 py-8 w-full rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
       {/* Logo Section */}
       <div className="flex items-center space-x-2">
-        <img src="/logo.png" alt="Files 24 Logo" className="h-6 w-6" />
-        <span className="font-bold text-xl text-gray-800">REIA</span>
+        <img src="/logo.png" alt="Files 24 Logo" className="h-8 w-8" /> {/* Increased logo size */}
+        <span className="font-bold text-2xl text-gray-800">REIA</span>
       </div>
 
       {/* Menu Items */}
-      <div className="flex space-x-4 text-gray-700">
+      <div className="flex space-x-8 text-gray-700 text-lg"> {/* Adjusted spacing and font size */}
         <MenubarMenu>
           <MenubarTrigger>Features</MenubarTrigger>
         </MenubarMenu>
@@ -39,7 +33,7 @@ export default function MarketingMenubar() {
       </div>
 
       {/* Authentication Links */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-6">
         {isLoggedIn ? (
           <>
             <span className="text-gray-600">Hello, {session.user?.name}</span>
@@ -56,11 +50,11 @@ export default function MarketingMenubar() {
               Login
             </a>
             <a
-              href="/register"
-              className="bg-blue-600 text-white font-semibold py-1 px-4 rounded hover:bg-blue-700"
+              href="/register" className="bg-black text-white font-semibold py-2 px-6 rounded hover:bg-gray-500"
             >
-              Sign Up
+            Sign Up
             </a>
+
           </>
         )}
       </div>

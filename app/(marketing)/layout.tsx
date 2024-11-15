@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function MarketingLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center sm:px-1 lg:px-1 bg-gray-50">
+    <div className="flex min-h-screen flex-col items-center justify-center sm:px-1 lg:px-1 bg-white">
       {children}
     </div>
   );
