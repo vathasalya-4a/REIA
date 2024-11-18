@@ -20,7 +20,7 @@ export default async function SitePosts({
   // Fetch candidate data
   const data = await prisma.candidate.findUnique({
     where: {
-      id: Number(params.id), // Ensure id is a number if required by Prisma
+      id: Number(params.id),
     },
     select: {
       id: true,
@@ -49,9 +49,9 @@ export default async function SitePosts({
             All Resumes for {data.name}
           </h1>
         </div>
-        <CreatePostButton siteId={params.id}/>
+        <CreatePostButton candidateId={params.id}/>
       </div>
-      <Posts siteId={params.id} />
+      <Posts candidateId={params.id} />
     </>
   );
 }

@@ -16,6 +16,7 @@ import {
   Menu,
   Newspaper,
   Settings,
+  FileEdit,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,9 +58,9 @@ const externalLinks = [
 export default function Nav({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
   const { id } = useParams() as { id?: string };
-
   const [siteId, setSiteId] = useState<string | null>();
-
+  const { resumeid } = useParams() as { resumeid?: string};
+ 
   useEffect(() => {
     if (segments[0] === "post" && id) {
       getSiteFromPostId(id).then((id) => {
@@ -69,7 +70,22 @@ export default function Nav({ children }: { children: ReactNode }) {
   }, [id]);
 
   const tabs = useMemo(() => {
-    if (segments[0] === "site" && id && segments[2] === "checkats") {
+    if (segments[0] === "site" && id && resumeid && segments[3] === "modifyresume") {
+      return [
+        {
+          name: "Back to All Resumes",
+          href: `/site/${id}`,
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Modify Resume",
+          href: `/site/${id}/${resumeid}/modifyresume`,
+          isActive: segments[3] === "modifyresume",
+          icon: <FileEdit width={18} />,
+        },
+      ];
+    }   
+    else if (segments[0] === "site" && id && segments[2] === "checkats") {
       return [
         {
           name: "Back to All Resumes",

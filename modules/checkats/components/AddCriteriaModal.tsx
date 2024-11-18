@@ -34,18 +34,19 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
 
   const handleAddCriteria = () => {
     if (localTotalPercentage === 100) {
-      setToastMessage('Maximum criteria reached. No more criteria can be added.');
+      setToastMessage('No more criteria can be added. As the maximum criteria is reached');
     } else if (localTotalPercentage + percentage > 100 && localTotalPercentage < 100) {
-      setToastMessage('Total percentage reached. Please adjust values.');
+      setToastMessage('Total crietria percentage is reached. Please adjust the values.');
     } else if (criteria && percentage) {
       const newCriteria = { name: criteria, percentage };
       onAddCriteria(newCriteria);
       setLocalTotalPercentage((prev) => prev + percentage);
-      setToastMessage('Criteria added successfully!');
+      setToastMessage(criteria + ' ' + 'with' + ' ' + percentage + '%' + ' ' + 'criteria added successfully!');
       setCriteria('');
       setPercentage(0);
     } else {
       setToastMessage('Please select both criteria and percentage.');
+      closeToast();
     }
   };
 
@@ -55,10 +56,6 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
   };
 
   const closeToast = () => setToastMessage('');
-
- /* const toggleDropdown = () => {
-    setIsDropdownOpen(isDropdownOpen);
-  };*/
 
   if (!isOpen) return null;
 
@@ -144,16 +141,17 @@ const AddCriteriaModal: React.FC<AddCriteriaModalProps> = ({ isOpen, onClose, on
           </div>
 
         </div>
-
-        {
-        toastMessage && (
-          <div className="fixed bottom-5 right-5 bg-white text-black px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2">
-            <span>{toastMessage}</span>
-            <button onClick={closeToast} className="ml-4 text-black">
-              <XIcon className="h-2 w-2" aria-hidden="true" />
-            </button>
-          </div>
-        )}
+        {toastMessage && (
+  <div className="fixed bottom-4 right-6 bg-white text-black p-5 rounded-lg shadow-lg flex flex-col items-start justify-center w-[320px] h-auto border border-gray-300 transition group">
+    <button
+      onClick={closeToast}
+      className="absolute top-2 right-2 text-gray-600 focus:outline-none opacity-0 group-hover:opacity-100 transition">
+      <XIcon className="h-3 w-3" aria-hidden="true" />
+    </button>
+    <span className="text-left m-0 p-0 leading-normal font-bold text-black">Message</span>
+    <span className="text-left m-0 p-0 leading-normal">{toastMessage}</span>
+  </div>
+)}
       </div>
     </div>
   );

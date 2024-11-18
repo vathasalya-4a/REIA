@@ -36,7 +36,7 @@ const JobDescription: React.FC<JobDescriptionProps> = ({
             Have a file?{' '}
             <button
               onClick={() => setIsFileUpload(true)}
-              className="text-blue-gray underline hover:text-gray-500 mb-4 "
+              className="text-gray underline hover:text-gray-500 mb-4 "
             >
               Upload your job description directly instead.
             </button>
