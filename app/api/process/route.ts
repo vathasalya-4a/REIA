@@ -40,8 +40,8 @@ function extractSuggestionsFromOpenAiResponse(openAiResponse: string): string {
   if (suggestionsStart !== -1) {
     const suggestions = openAiResponse
       .split("\n")
-      .slice(2) // Skip the first two lines (ATS Compatibility Score and blank line)
-      .filter((line) => line.trim().startsWith("-")); // Include only bullet points
+      .slice(2) 
+      .filter((line) => line.trim().startsWith("-"));
     return suggestions.join("\n");
   }
   return "";
@@ -52,8 +52,6 @@ export async function POST(request: NextRequest) {
     const { jobDescription, resumeTexts, fileNames, weights, candidateId, resumeId, flag } = await request.json();
     const atsCompatibilityResults: ATSCompatibilityResult[] = [];
     const fileNamesArray = Array.isArray(fileNames) ? fileNames : [fileNames];
-
-    
 
     if (flag === 0) {
       for (let i = 0; i < resumeTexts.length; i++) {
@@ -119,7 +117,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
     return NextResponse.json({ atsCompatibilityResults });
   } catch (error) {
     console.error("Error processing ATS request:", error);

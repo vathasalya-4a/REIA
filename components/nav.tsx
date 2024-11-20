@@ -78,7 +78,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Modify Resume",
+          name: "Transform Resume",
           href: `/site/${id}/${resumeid}/modifyresume`,
           isActive: segments[3] === "modifyresume",
           icon: <FileEdit width={18} />,
