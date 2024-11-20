@@ -10,21 +10,21 @@ generator client {
 model User {
   id                  String     @id @default(cuid())
   name                String?
-  // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
   username            String?
-  gh_username         String?
   email               String?    @unique
   emailVerified       DateTime?
   image               String?
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
+
   accounts            Account[]
   sessions            Session[]
-  // sites         Site[]
+  // sites            Site[]
   posts               Post[]     @relation(name: "createdByUser")
   postsUpdatedByUsers Post[]     @relation(name: "updatedByUser")
   sites               SiteUser[]
   candidates          Candidate[]
+  clients             Client[]
 }
 
 model Account {
@@ -154,19 +154,61 @@ model Example {
   imageBlurhash String? @db.Text
 }
 
+model Client {
+  id                 String           @id @default(cuid())
+  name               String
+  state              String 
+  userId             String
+
+  projects           Project[]
+
+  user      User        @relation(fields: [userId], references: [id])
+}
+
+model Project {
+  id                 String            @id @default(cuid())
+  name               String
+  cutumfield         String 
+  positiontype       String
+  jobdescription     String
+  status             String  @default("Open")
+  submitted          String  @default("No")
+  submissionduedate  DateTime
+  submitteddate      DateTime
+  startdate          DateTime
+  enddate            DateTime
+  clientId           String
+
+  candidates         Candidate[]
+
+  client             Client    @relation(fields: [clientId], references: [id])
+}
+
 
 model Candidate {
   id                 Int                   @id @default(autoincrement())
   name               String
-  image         String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
-  imageBlurhash String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text
-  createdAt          DateTime              @default(now())
+  email              String
+  phone              String
+  linkedinURL        String
+  location           String
+  workauthorization  String
+  salaryexpectations Int
+  availablehours     Int
+  documentsS3URL     String
+  createdAt          DateTime @default(now())
+  image              String?  @default("https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png") @db.Text
+  imageBlurhash      String?  @default("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC") @db.Text 
+  userId             String
+  projectId          String 
+
   atsScores          ATS_Score[]
   generatedATSScores Generated_ATS_Score[]
   generatedResumes   Generated_Resume[]
   resumes            Resume[]
-  userId    String      // Foreign key to User
-  user      User        @relation(fields: [userId], references: [id])
+  
+  project      Project     @relation(fields: [projectId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
 }
 
 
@@ -178,8 +220,10 @@ model Resume {
   JobDescription        String
   uploadedAt            DateTime           @default(now())
   candidateId           Int
+
   atsScores             ATS_Score[]        // Remove fields, references, and onDelete here
   generatedResumes      Generated_Resume[]
+
   candidate             Candidate          @relation(fields: [candidateId], references: [id])
 }
 
@@ -190,6 +234,7 @@ model ATS_Score {
   createdAt   DateTime  @default(now())
   candidateId Int
   resumeId    Int
+
   candidate   Candidate @relation(fields: [candidateId], references: [id])
   resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade) // Specify onDelete here
 }
@@ -203,7 +248,9 @@ model Generated_Resume {
   uploadedAt         DateTime              @default(now())
   candidateId        Int
   resumeId           Int
+
   generatedATSScores Generated_ATS_Score[] // Remove fields, references, and onDelete here
+
   candidate          Candidate             @relation(fields: [candidateId], references: [id])
   resume             Resume                @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 }
@@ -215,6 +262,7 @@ model Generated_ATS_Score {
   createdAt         DateTime         @default(now())
   candidateId       Int
   generatedResumeId Int
+
   candidate         Candidate        @relation(fields: [candidateId], references: [id])
   generatedResume   Generated_Resume @relation(fields: [generatedResumeId], references: [id], onDelete: Cascade) // Specify onDelete here
 }

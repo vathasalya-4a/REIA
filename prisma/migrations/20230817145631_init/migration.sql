@@ -3,7 +3,6 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "username" TEXT,
-    "gh_username" TEXT,
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
@@ -62,7 +61,7 @@ CREATE TABLE "Post" (
     "imageBlurhash" TEXT DEFAULT 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "published" BOOLEAN NOT NULL DEFAULT false,
+    "published" BOOLEAN NOT NULL DEFAULT False,
     "siteId" TEXT,
     "userId" TEXT,
 
@@ -101,13 +100,50 @@ CREATE TABLE "Example" (
     CONSTRAINT "Example_pkey" PRIMARY KEY ("id")
 );
 
+----------------------Resume Evaluation and Interviewing Assistant -----------------------------
+
+CREATE TABLE "Client" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "state" TEXT,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Client_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "Project" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "cutumfield" TEXT,
+    "positiontype" TEXT,
+    "jobdescription" TEXT,
+    "status" TEXT DEFAULT 'Open',
+    "submitted" TEXT DEFAULT 'No',
+    "submissionduedate" Date,
+    "submitteddate" Date,
+    "startdate" Date,
+    "enddate" Date,
+    "clientId" TEXT NOT NULL,
+
+    CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+);
+
 CREATE TABLE "Candidate" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phone" TEXT,
+    "linkedinURL" TEXT,
+    "location" TEXT,
+    "workauthorization" TEXT,
+    "salaryexpectations" INTEGER,
+    "availablehours" INTEGER,
+    "documentsS3URL" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "userId" TEXT NOT NULL,
     "image" TEXT DEFAULT 'https://public.blob.vercel-storage.com/eEZHAoPTOBSYGBE3/hxfcV5V-eInX3jbVUhjAt1suB7zB88uGd1j20b.png',
     "imageBlurhash" TEXT DEFAULT 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAhCAYAAACbffiEAAAACXBIWXMAABYlAAAWJQFJUiTwAAABfUlEQVR4nN3XyZLDIAwE0Pz/v3q3r55JDlSBplsIEI49h76k4opexCK/juP4eXjOT149f2Tf9ySPgcjCc7kdpBTgDPKByKK2bTPFEdMO0RDrusJ0wLRBGCIuelmWJAjkgPGDSIQEMBDCfA2CEPM80+Qwl0JkNxBimiaYGOTUlXYI60YoehzHJDEm7kxjV3whOQTD3AaCuhGKHoYhyb+CBMwjIAFz647kTqyapdV4enGINuDJMSScPmijSwjCaHeLcT77C7EC0C1ugaCTi2HYfAZANgj6Z9A8xY5eiYghDMNQBJNCWhASot0jGsSCUiHWZcSGQjaWWCDaGMOWnsCcn2QhVkRuxqqNxMSdUSElCDbp1hbNOsa6Ugxh7xXauF4DyM1m5BLtCylBXgaxvPXVwEoOBjeIFVODtW74oj1yBQah3E8tyz3SkpolKS9Geo9YMD1QJR1Go4oJkgO1pgbNZq0AOUPChyjvh7vlXaQa+X1UXwKxgHokB2XPxbX+AnijwIU4ahazAAAAAElFTkSuQmCC',
+    "projectId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
 
     CONSTRAINT "Candidate_pkey" PRIMARY KEY ("id")
 );
@@ -216,8 +252,15 @@ ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFE
 -- AddForeignKey
 ALTER TABLE "Site" ADD CONSTRAINT "Site_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+
+ALTER TABLE "Client" ADD CONSTRAINT "Client_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE "Project" ADD CONSTRAINT "Project_clientId_fkey" FOREIGN KEY ("clientId") REFERENCES "Client"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE "Candidate" ADD CONSTRAINT "Candidate_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+ALTER TABLE "Candidate" ADD CONSTRAINT "Candidate_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Resume" ADD CONSTRAINT "Resume_candidateId_fkey" FOREIGN KEY ("candidateId") REFERENCES "Candidate"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
