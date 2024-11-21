@@ -26,9 +26,9 @@ export default async function ClientProjects({
       id: true,
       name: true,
       state: true,
-      user: {
+      users: {
         select: {
-          id: true,
+          id: true, // Fetch user IDs associated with the client
         },
       },
     },

@@ -19,11 +19,10 @@ model User {
 
   accounts            Account[]
   sessions            Session[]
-  // sites            Site[]
   posts               Post[]     @relation(name: "createdByUser")
   postsUpdatedByUsers Post[]     @relation(name: "updatedByUser")
   sites               SiteUser[]
-  clients             Client[]
+  clients             ClientUser[]
 }
 
 model Account {
@@ -153,15 +152,41 @@ model Example {
   imageBlurhash String? @db.Text
 }
 
+model ClientInvite {
+  email     String
+  expires   DateTime
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade) // Reference Client, not Site
+  clientId  String
+  createdAt DateTime @default(now())
+
+  @@unique([email, clientId]) // Ensure unique invites for a client and email
+  @@index([clientId])
+}
+
+
+model ClientUser {
+  id        String   @id @default(cuid())
+  role      String   @default("member") // Role of the user in the client context
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId  String
+
+  @@unique([userId, clientId]) // Ensures a user can only have one role per client
+  @@index([clientId]) // Index for quick lookups by client
+}
+
 model Client {
-  id                 String           @id @default(cuid())
-  name               String?
-  state              String?
-  userId             String
-
-  projects           Project[]
-
-  user      User        @relation(fields: [userId], references: [id])
+  id        String       @id @default(cuid())
+  name      String?
+  state     String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  users     ClientUser[] // Ensure this relation exists
+  invites   ClientInvite[]
+  projects  Project[]
 }
 
 model Project {
