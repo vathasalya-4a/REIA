@@ -37,6 +37,7 @@ export default async function Sites({
       createdAt: true,
       image: true,
       imageBlurhash: true,
+      projectId: true,
     },
     orderBy: {
       createdAt: "asc",

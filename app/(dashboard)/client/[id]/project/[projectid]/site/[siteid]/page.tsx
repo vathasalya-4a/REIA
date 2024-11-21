@@ -1,27 +1,33 @@
-// app/(dashboard)/site/[id]/page.tsx
-
 import { getSession } from "@/lib/auth";
-import { AcceptInviteModal } from "@/modules/people/components/accept-invite-modal";
+import { notFound, redirect } from "next/navigation";
 import CreatePostButton from "@/modules/posts/components/create-post-button";
 import Posts from "@/modules/posts/components/posts";
 import prisma from "@/prisma";
-import { notFound, redirect } from "next/navigation";
 
 export default async function SitePosts({
   params,
 }: {
-  params: { id: string, projectid: string, siteid: string };
+  params: { id?: string; projectid?: string; siteid?: string };
 }) {
   const session = await getSession();
   if (!session) {
     redirect("/login");
   }
 
+  // Validate required parameters
+  const { id, projectid, siteid } = params;
+  if (!id || !projectid || !siteid) {
+    notFound();
+  }
+
+  const candidateId = parseInt(siteid, 10);
+  if (isNaN(candidateId)) {
+    notFound();
+  }
+
   // Fetch candidate data
   const data = await prisma.candidate.findUnique({
-    where: {
-      id: parseInt(params.siteid),
-    },
+    where: { id: candidateId },
     select: {
       id: true,
       name: true,
@@ -44,7 +50,6 @@ export default async function SitePosts({
     },
   });
 
-  // Handle case if candidate not found
   if (!data) {
     notFound();
   }
@@ -57,15 +62,15 @@ export default async function SitePosts({
             All Resumes for {data.name}
           </h1>
         </div>
+        {/* Pass all required props */}
         <CreatePostButton
-  clientId={params.id} 
-  projectId={params.projectid} 
-  candidateId={params.siteid} 
-/>
+          clientId={id}
+          projectId={projectid}
+          candidateId={siteid}
+        />
       </div>
-      <Posts clientId={params.id} 
-  projectId={params.projectid} 
-  candidateId={params.siteid}  />
+      {/* Pass all required props */}
+      <Posts clientId={id} projectId={projectid} candidateId={siteid} />
     </>
   );
 }
