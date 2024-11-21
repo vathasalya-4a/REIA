@@ -1,20 +1,20 @@
 import { Suspense } from "react";
-import Clients from "@/modules/clients/components/clients";
+import Sites from "@/modules/sites/components/sites";
 import PlaceholderCard from "@/components/ui/placeholder-card";
-import CreateClientButton from "@/modules/clients/components/create-client-button";
-import CreateClientModal from "@/modules/clients/components/create-client-modal";
+import CreateSiteButton from "@/modules/sites/components/create-site-button";
+import CreateSiteModal from "@/modules/sites/components/create-site-modal";
 
-export default function AllClients() {
+export default function AllSites() {
   return (
     <div className="flex max-w-screen-xl flex-col space-y-12 p-8">
       <div className="flex flex-col space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="font-cal text-3xl font-bold dark:text-white">
-            All Clients
+            All Candidates
           </h1>
-          <CreateClientButton>
-            <CreateClientModal />
-          </CreateClientButton>
+          <CreateSiteButton>
+            <CreateSiteModal />
+          </CreateSiteButton>
         </div>
         <Suspense
           fallback={
@@ -25,7 +25,7 @@ export default function AllClients() {
             </div>
           }
         >
-          <Clients />
+          <Sites />
         </Suspense>
       </div>
     </div>

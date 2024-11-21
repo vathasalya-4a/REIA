@@ -17,6 +17,7 @@ export default function ModifyResume() {
   const [error, setError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [pdfData, setPdfData] = useState<string | null>(null);
   const [form, setform] = useState({
     TaskID: "",
     ResourceType: "",
@@ -124,8 +125,7 @@ export default function ModifyResume() {
         if (generateResponse.ok) {
           console.log('File generated:', generateResult.path);
     
-          // Optionally, trigger a download or update the UI
-          window.open(generateResult.path, '_blank');
+          setPdfData(generateResult.path);
         } else {
           console.error('Error generating file:', generateResult.message);
         }
@@ -289,6 +289,27 @@ export default function ModifyResume() {
             )
         }
       </div>
+      {pdfData && (
+        <div className="mt-8">
+          <h3 className="text-2xl font-semibold text-center mb-4 text-gray-700">
+            Your Generated Resume
+          </h3>
+          <iframe
+            src={pdfData}
+            title="Generated Resume"
+            className="w-full h-screen border border-gray-300 rounded-lg shadow-sm"
+          />
+          <div className="flex justify-center mt-4">
+            <a
+              href={pdfData}
+              download="generated_resume.pdf"
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
+            >
+              Download Resume
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

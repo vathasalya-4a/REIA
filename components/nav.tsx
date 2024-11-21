@@ -58,6 +58,7 @@ const externalLinks = [
 export default function Nav({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
   const { id } = useParams() as { id?: string };
+  const { projectid } = useParams() as { projectid?: string };
   const [siteId, setSiteId] = useState<string | null>();
   const { resumeid } = useParams() as { resumeid?: string};
  
@@ -99,23 +100,44 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <UploadCloudIcon width={18} />,
         },
       ];
-    }    
-    else if (segments[0] === "site" && id) {
+    }
+    else if (segments[0] === "client" && id && segments[2] === "project" && projectid) {
       return [
         {
-          name: "Back to All Candidates",
-          href: "/sites",
+          name: "Back to All Projects",
+          href: `/client/${id}`, // Ensure correct template string interpolation here
           icon: <ArrowLeft width={18} />,
         },
         {
-          name: "Resumes",
-          href: `/site/${id}`,
+          name: "Candidates",
+          href: `/client/${id}/project/${projectid}`, // This link should include both clientId and projectId
+          isActive: segments.length === 4,  // Adjust the length check if needed
+          icon: <Newspaper width={18} />,
+        },
+        {
+          name: "Settings",
+          href: `/client/${id}/settings`,
+          isActive: segments.includes("settings"),
+          icon: <Settings width={18} />,
+        },
+      ];
+    }    
+    else if (segments[0] === "client" && id) {
+      return [
+        {
+          name: "Back to All clients",
+          href: "/clients",
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Projects",
+          href: `/client/${id}`,
           isActive: segments.length === 2,
           icon: <Newspaper width={18} />,
         },
         {
           name: "Settings",
-          href: `/site/${id}/settings`,
+          href: `/client/${id}/settings`,
           isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
         },
@@ -143,9 +165,9 @@ export default function Nav({ children }: { children: ReactNode }) {
     }
     return [
       {
-        name: "Candidates",
-        href: "/sites",
-        isActive: segments[0] === "sites" || segments.length === 0,
+        name: "Clients",
+        href: "/clients",
+        isActive: segments[0] === "clients" || segments.length === 0,
         icon: <User width={18} />,
       },
       {

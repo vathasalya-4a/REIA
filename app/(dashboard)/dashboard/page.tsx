@@ -10,7 +10,7 @@ export default function Overview() {
 
   useEffect(() => {
     // Redirect to the correct path for sites
-    router.push("/sites");
+    router.push("/clients");
   }, [router]);
 
   return null; // Render nothing since we're redirecting
