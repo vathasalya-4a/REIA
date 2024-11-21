@@ -13,29 +13,46 @@ import { put } from "@vercel/blob";
 import prisma from "@/prisma";
 import { withSiteAuth } from "./auth";
 
-export const createSite = async (formData: FormData) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
+export const createSite = async (formData: FormData, projectId: string) => {
+  // Extract fields from formData
   const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const linkedinURL = formData.get("linkedinURL") as string;
+  const location = formData.get("location") as string;
+  const workauthorization = formData.get("workauthorization") as string;
+  const salaryexpectations = parseInt(formData.get("salaryexpectations") as string, 10) || null;
+  const availablehours = parseInt(formData.get("availablehours") as string, 10) || null;
+  const documentsS3URL = formData.get("documentsS3URL") as string;
+  const image = formData.get("image") as string || undefined; // Optional
+  const imageBlurhash = formData.get("imageBlurhash") as string || undefined; // Optional
 
   try {
+    // Create a new candidate using Prisma
     const response = await prisma.candidate.create({
       data: {
         name,
-        user: {
+        email,
+        phone,
+        linkedinURL,
+        location,
+        workauthorization,
+        salaryexpectations,
+        availablehours,
+        documentsS3URL,
+        image,
+        imageBlurhash,
+        project: {
           connect: {
-            id: session.user.id,
+            id: projectId, // Connect candidate to the project
           },
         },
       },
     });
-    return response;
+
+    return response; // Return the created candidate object
   } catch (error: any) {
-    console.log(error.message);
+    console.error("Error creating candidate:", error.message);
     return {
       error: error.message,
     };

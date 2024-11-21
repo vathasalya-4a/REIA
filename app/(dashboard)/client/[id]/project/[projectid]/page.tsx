@@ -4,7 +4,11 @@ import PlaceholderCard from "@/components/ui/placeholder-card";
 import CreateSiteButton from "@/modules/sites/components/create-site-button";
 import CreateSiteModal from "@/modules/sites/components/create-site-modal";
 
-export default function AllSites() {
+export default function AllSites({
+  params,
+}: {
+  params: { id: string, projectid: string };
+}) {
   return (
     <div className="flex max-w-screen-xl flex-col space-y-12 p-8">
       <div className="flex flex-col space-y-6">
@@ -13,7 +17,7 @@ export default function AllSites() {
             All Candidates
           </h1>
           <CreateSiteButton>
-            <CreateSiteModal />
+            <CreateSiteModal clientId = { params.id } projectId = { params.projectid} />
           </CreateSiteButton>
         </div>
         <Suspense
@@ -25,7 +29,7 @@ export default function AllSites() {
             </div>
           }
         >
-          <Sites />
+          <Sites clientId = {params.id} projectId = {params.projectid} />
         </Suspense>
       </div>
     </div>

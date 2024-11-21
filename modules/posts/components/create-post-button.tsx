@@ -4,13 +4,21 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingDots from "@/components/icons/loading-dots";
 
-export default function CreatePostButton({ candidateId }: { candidateId: string }) {
+export default function CreatePostButton({
+  clientId,
+  projectId,
+  candidateId,
+}: {
+  clientId: string;
+  projectId: string;
+  candidateId: string;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => {
     setIsLoading(true);
-    router.push(`/site/${candidateId}/checkats`);
+    router.push(`/client/${clientId}/project/${projectId}/site/${candidateId}/checkats`);
   };
 
   return (

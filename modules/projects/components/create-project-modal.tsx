@@ -44,7 +44,7 @@ export default function CreateProjectModal({
       va.track("Created Project");
       const { id } = res;
       router.refresh();
-      router.push(`client/id=${clientId}/project/projectid=${id}/`);  // Redirect to the newly created project's page
+      router.push(`/client/${clientId}/project/${id}`);  // Redirect to the newly created project's page
       modal?.hide();
       toast.success(`Successfully created Project!`);
     }

@@ -10,7 +10,7 @@ import { notFound, redirect } from "next/navigation";
 export default async function SitePosts({
   params,
 }: {
-  params: { siteid: string };
+  params: { id: string, projectid: string, siteid: string };
 }) {
   const session = await getSession();
   if (!session) {
@@ -57,9 +57,15 @@ export default async function SitePosts({
             All Resumes for {data.name}
           </h1>
         </div>
-        <CreatePostButton candidateId={params.id}/>
+        <CreatePostButton
+  clientId={params.id} 
+  projectId={params.projectid} 
+  candidateId={params.siteid} 
+/>
       </div>
-      <Posts candidateId={params.id} />
+      <Posts clientId={params.id} 
+  projectId={params.projectid} 
+  candidateId={params.siteid}  />
     </>
   );
 }

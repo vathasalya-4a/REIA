@@ -59,6 +59,7 @@ export default function Nav({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
   const { id } = useParams() as { id?: string };
   const { projectid } = useParams() as { projectid?: string };
+  const { siteid } = useParams() as { siteid?: string };
   const [siteId, setSiteId] = useState<string | null>();
   const { resumeid } = useParams() as { resumeid?: string};
  
@@ -86,18 +87,39 @@ export default function Nav({ children }: { children: ReactNode }) {
         },
       ];
     }   
-    else if (segments[0] === "site" && id && segments[2] === "checkats") {
+    else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "checkats" ) {
       return [
         {
           name: "Back to All Resumes",
-          href: `/site/${id}`,
+          href: `/client/${id}/project/${projectid}/site/${siteid}`,
           icon: <ArrowLeft width={18} />,
         },
         {
           name: "Upload Resume",
-          href: `/site/${id}/checkats`,
-          isActive: segments[2] === "checkats",
+          href: `/client/${id}/project/${projectid}/site/${siteid}/checkats`,
+          isActive: segments[6] === "checkats",
           icon: <UploadCloudIcon width={18} />,
+        },
+      ];
+    }
+    else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid ) {
+      return [
+        {
+          name: "Back to All Candidates",
+          href: `/client/${id}/project/${projectid}`,
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Resumes",
+          href: `/client/${id}/project/${projectid}/site/${siteid}`,
+          isActive: segments[4] === "site",
+          icon: <UploadCloudIcon width={18} />,
+        },
+        {
+          name: "Settings",
+          href: `/client/${id}/settings`,
+          isActive: segments.includes("settings"),
+          icon: <Settings width={18} />,
         },
       ];
     }
@@ -105,13 +127,13 @@ export default function Nav({ children }: { children: ReactNode }) {
       return [
         {
           name: "Back to All Projects",
-          href: `/client/${id}`, // Ensure correct template string interpolation here
+          href: `/client/${id}`, 
           icon: <ArrowLeft width={18} />,
         },
         {
           name: "Candidates",
-          href: `/client/${id}/project/${projectid}`, // This link should include both clientId and projectId
-          isActive: segments.length === 4,  // Adjust the length check if needed
+          href: `/client/${id}/project/${projectid}`, 
+          isActive: segments.length === 4,
           icon: <Newspaper width={18} />,
         },
         {

@@ -10,30 +10,56 @@ import va from "@vercel/analytics";
 import { useEffect, useState } from "react";
 import { createSite } from "../actions";
 
-export default function CreateSiteModal() {
+export default function CreateSiteModal({
+  clientId,
+  projectId
+}: {
+  clientId: string,
+  projectId: string;
+}) {
   const router = useRouter();
   const modal = useModal();
 
   const [data, setData] = useState({
     name: "",
+    email: "",
+    phone: "",
+    linkedinURL: "",
+    location: "",
+    workauthorization: "",
+    salaryexpectations: "",
+    availablehours: "",
+    documentsS3URL: "",
+    createdAt: "",
+    image: "",
+    imageBlurhash: ""
   });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    // Create the project using form data and projectId
+    const res = await createSite(formData, projectId);
+    if ("error" in res) {
+      toast.error(res.error); // Handle error case
+    } else {
+      va.track("Created Candidate");
+      const { id } = res;
+      router.refresh();
+      router.push(`/client/${clientId}/project/${projectId}/site/${id}`);
+      modal?.hide();
+      toast.success(`Successfully created Candidate!`);
+    }
+  };
 
   return (
     <form
-      action={async (data: FormData) =>
-        createSite(data).then((res: any) => {
-          if (res.error) {
-            toast.error(res.error);
-          } else {
-            va.track("Created Candidate");
-            const { id } = res;
-            router.refresh();
-            router.push(`/site/${id}`);
-            modal?.hide();
-            toast.success(`Successfully created Candidate!`);
-          }
-        })
-      }
+      onSubmit={handleSubmit} // Updated from onClick to onSubmit
       className="w-full rounded-md bg-white dark:bg-black md:max-w-md md:border md:border-stone-200 md:shadow dark:md:border-stone-700"
     >
       <div className="relative flex flex-col space-y-4 p-5 md:p-10">

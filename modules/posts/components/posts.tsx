@@ -5,9 +5,13 @@ import { redirect } from "next/navigation";
 import ResumeTable from "./ResumeTable";
 
 export default async function Posts({
+  clientId,
+  projectId,
   candidateId,
   limit,
 }: {
+  clientId?: string;
+  projectId?: string;
   candidateId?: string | number;
   limit?: number;
 }) {
