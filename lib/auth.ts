@@ -14,12 +14,14 @@ export const authOptions: NextAuthOptions = {
   providers: [
     EmailProvider({
       sendVerificationRequest: async ({ identifier, url }) => {
-        console.log(`Login link: ${url}`);
+        console.log(environment);
         if (environment === "development") {
           console.log(`Login link: ${url}`);
         } else {
           console.log("sending Email");
           console.log(identifier);
+          url = "https://reia-production-0908.up.railway.app/api/auth/callback/email?callbackUrl=https%3A%2F%2Freia-production-0908.up.railway.app%2Flogin&token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&email=youremail@gmail.com",
+          console.log(url)
 
           await sendEmail({
             email: identifier,

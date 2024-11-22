@@ -12,7 +12,7 @@ export default function AIInterview() {
     const [showMenu, setShowMenu] = useState(null); // Dropdown menu state
     const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
-    const API_TOKEN = "4be2a387710457cc4e1625cb17c80e76354b0cd06f1aea7fd18112aca0c4bf04";
+    const API_TOKEN = process.env.API_TOKEN;
     const params = useParams();
     const projectId = params.projectid;
 

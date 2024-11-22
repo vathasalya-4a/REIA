@@ -163,7 +163,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Newspaper width={18} />,
         },
         {
-          name: "Interviews",
+          name: "AI Interview",
           href: `/client/${id}/project/${projectid}/interview`,
           isActive: segments.length === 5,
           icon: <Newspaper width={18} />,
