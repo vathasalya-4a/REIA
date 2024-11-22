@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import Form from "@/components/form";
-import DeleteProjectForm from "@modules/projects/components/delete-project-form";
 import { updateProject } from "@/modules/projects/actions";
+import  DeleteProjectForm  from "@/modules/projects/components/delete-project-form"
 
 export default async function ProjectSettingsIndex({
   params,
@@ -29,7 +29,7 @@ export default async function ProjectSettingsIndex({
         }}
         handleSubmit={updateProject}
       />
-      <DeleteProjectForm clientName={data?.name!} />
+      <DeleteProjectForm projectName={data?.name!} />
     </div>
   );
 }
