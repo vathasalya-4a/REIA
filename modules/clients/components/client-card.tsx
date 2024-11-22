@@ -2,9 +2,12 @@ import { Client } from "@prisma/client";  // Ensure you import Client from Prism
 import { BarChart } from "lucide-react";
 import Link from "next/link";
 
-// Define the type for the data prop explicitly
 interface ClientCardProps {
-  data: Client & { projects: { id: string; name: string }[] }; // Include projects in the type
+  data: Client & {
+    projects: { id: string; name: string }[]; // Include projects in the type
+    createdAt: Date; // Add createdAt if needed
+    updatedAt: Date; // Add updatedAt if needed
+  };
 }
 
 export default function ClientCard({ data }: ClientCardProps) {

@@ -11,7 +11,6 @@ export default async function Clients({ limit }: { limit?: number }) {
     redirect("/login");
   }
 
-  // Fetch clients through the ClientUser relationship
   const clients = await prisma.client.findMany({
     where: {
       users: {
@@ -24,15 +23,21 @@ export default async function Clients({ limit }: { limit?: number }) {
       id: true,
       name: true,
       state: true,
-      users: true,
-      invites: true,
-      projects: true, // Include related projects
+      createdAt: true,
+      updatedAt: true,
+      projects: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
     orderBy: {
       name: "asc", // Order alphabetically
     },
     ...(limit ? { take: limit } : {}),
-  });
+  });  
+  
 
   return (
     <>
