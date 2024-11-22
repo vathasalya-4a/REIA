@@ -6,17 +6,17 @@ import { useParams, useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
-import { deleteClient } from "../actions";
+import { deleteProject } from "../actions";
 
-export default function DeleteClientForm({ projectName }: { projectName: string }) {
-  const { id } = useParams() as { projectid: string };
+export default function DeleteProjectForm({ projectName }: { projectName: string }) {
+  const { projectid } = useParams() as { projectid: string };
   const router = useRouter();
 
   return (
     <form
       action={async (data: FormData) => {
         if (window.confirm("Are you sure you want to delete your site?")) {
-          await deleteproject(id, data, "delete")
+          await deleteProject(projectid, data, "delete")
             .then(async (res: any) => {
               if (res.error) {
                 toast.error(res.error);
@@ -37,16 +37,16 @@ export default function DeleteClientForm({ projectName }: { projectName: string 
       <div className="relative flex flex-col space-y-4 p-5 sm:p-10">
         <h2 className="font-cal text-xl dark:text-white">Delete Site</h2>
         <p className="text-sm text-stone-500 dark:text-stone-400">
-          Deletes your client and all projects associated with it. Type in the name
-          of your client <b>{clientName}</b> to confirm.
+          Deletes your project and all candidates associated with it. Type in the name
+          of your client <b>{projectName}</b> to confirm.
         </p>
 
         <input
           name="confirm"
           type="text"
           required
-          pattern={clientName}
-          placeholder={clientName}
+          pattern={projectName}
+          placeholder={projectName}
           className="w-full max-w-md rounded-md border border-stone-300 text-sm text-stone-900 placeholder-stone-300 focus:border-stone-500 focus:outline-none focus:ring-stone-500 dark:border-stone-600 dark:bg-black dark:text-white dark:placeholder-stone-700"
         />
       </div>

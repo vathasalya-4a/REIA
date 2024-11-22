@@ -122,7 +122,33 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
         },
       ];
-    }
+    }else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "interview") {
+      return [
+        {
+          name: "Back to All Projects",
+          href: `/client/${id}`, 
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Candidates",
+          href: `/client/${id}/project/${projectid}`, 
+          isActive: segments.length === 4,
+          icon: <Newspaper width={18} />,
+        },
+        {
+          name: "Interviews",
+          href: `/client/${id}/project/${projectid}/interview`,
+          isActive: segments.length === 5,
+          icon: <Newspaper width={18} />,
+        },
+        {
+          name: "Settings",
+          href: `/client/${id}/settings`,
+          isActive: segments.includes("settings"),
+          icon: <Settings width={18} />,
+        }
+      ];
+    }   
     else if (segments[0] === "client" && id && segments[2] === "project" && projectid) {
       return [
         {
@@ -137,6 +163,12 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Newspaper width={18} />,
         },
         {
+          name: "Interviews",
+          href: `/client/${id}/project/${projectid}/interview`,
+          isActive: segments.length === 5,
+          icon: <Newspaper width={18} />,
+        },
+        {
           name: "Settings",
           href: `/client/${id}/settings`,
           isActive: segments.includes("settings"),
@@ -147,7 +179,7 @@ export default function Nav({ children }: { children: ReactNode }) {
     else if (segments[0] === "client" && id) {
       return [
         {
-          name: "Back to All clients",
+          name: "Back to All Clients",
           href: "/clients",
           icon: <ArrowLeft width={18} />,
         },

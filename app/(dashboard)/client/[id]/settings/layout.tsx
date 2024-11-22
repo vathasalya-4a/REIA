@@ -16,9 +16,10 @@ export default async function ClientAnalyticsLayout({
     redirect("/login");
   }
 
+  // Fetch the client's data based on the authenticated user's association
   const data = await prisma.client.findMany({
     where: {
-      ClientUser: {
+      users: {
         some: {
           userId: session.user.id, // Match the user's ID in the related ClientUser model
         },
@@ -29,7 +30,7 @@ export default async function ClientAnalyticsLayout({
       name: true,
       state: true,
       projects: true, // Include projects if needed
-      ClientUser: {
+      users: {
         select: {
           userId: true,
         },
@@ -37,8 +38,9 @@ export default async function ClientAnalyticsLayout({
     },
   });
 
+  // Find the specific client associated with the user
   const clientUser = data.find((client) =>
-    client.ClientUser.some((u) => u.userId === session.user.id)
+    client.users.some((u) => u.userId === session.user.id)
   );
 
   if (!data || !clientUser) {

@@ -204,8 +204,19 @@ model Project {
   clientId           String
 
   candidates         Candidate[] // This creates the reverse relation to Candidate
-
+  interviews         Interview[]
   client             Client    @relation(fields: [clientId], references: [id])
+}
+
+model Interview {
+  id          String   @id @default(cuid())
+  title       String
+  questions   String
+  createdAt   DateTime @default(now())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
 }
 
 
