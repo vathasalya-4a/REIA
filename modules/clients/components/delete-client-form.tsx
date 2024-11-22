@@ -8,15 +8,15 @@ import { toast } from "sonner";
 import va from "@vercel/analytics";
 import { deleteClient } from "../actions";
 
-export default function DeleteClientForm({ projectName }: { projectName: string }) {
-  const { id } = useParams() as { projectid: string };
+export default function DeleteClientForm({ clientName }: { clientName: string }) {
+  const { id } = useParams() as { id: string };
   const router = useRouter();
 
   return (
     <form
       action={async (data: FormData) => {
         if (window.confirm("Are you sure you want to delete your site?")) {
-          await deleteproject(id, data, "delete")
+          await deleteClient(id, data, "delete")
             .then(async (res: any) => {
               if (res.error) {
                 toast.error(res.error);
