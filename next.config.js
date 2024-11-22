@@ -15,7 +15,7 @@ const nextConfig = {
       { hostname: "flag.vercel.app" },
       { hostname: "illustrations.popsy.co" },
       { hostname: "api.dicebear.com" },
-      { hostname: "reia-production.up.railway.app" },
+      { hostname: "reia-production-0908.up.railway.app" },
     ],
   },
   webpack: (config, { isServer }) => {
