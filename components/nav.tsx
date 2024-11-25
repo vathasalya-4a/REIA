@@ -17,6 +17,7 @@ import {
   Newspaper,
   Settings,
   FileEdit,
+  MessageCircle
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -102,6 +103,32 @@ export default function Nav({ children }: { children: ReactNode }) {
         },
       ];
     }
+    else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "candidate-interview"  ) {
+      return [
+        {
+          name: "Back to All Candidates",
+          href: `/client/${id}/project/${projectid}`,
+          icon: <ArrowLeft width={18} />,
+        },
+        {
+          name: "Resumes",
+          href: `/client/${id}/project/${projectid}/site/${siteid}`,
+          icon: <UploadCloudIcon width={18} />,
+        },
+        {
+          name: "Interview",
+          href: `/client/${id}/project/${projectid}/site/${siteid}/candidate-interview`,
+          isActive: segments[6] === "candidate-interview",
+          icon: <MessageCircle width={18} />,
+        },
+        {
+          name: "Settings",
+          href: `/client/${id}/settings`,
+          isActive: segments.includes("settings"),
+          icon: <Settings width={18} />,
+        },
+      ];
+    }
     else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid ) {
       return [
         {
@@ -114,6 +141,11 @@ export default function Nav({ children }: { children: ReactNode }) {
           href: `/client/${id}/project/${projectid}/site/${siteid}`,
           isActive: segments[4] === "site",
           icon: <UploadCloudIcon width={18} />,
+        },
+        {
+          name: "Interview",
+          href: `/client/${id}/project/${projectid}/site/${siteid}/candidate-interview`,
+          icon: <MessageCircle width={18} />,
         },
         {
           name: "Settings",
@@ -136,10 +168,10 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Newspaper width={18} />,
         },
         {
-          name: "Interviews",
+          name: "AI Interview",
           href: `/client/${id}/project/${projectid}/interview`,
           isActive: segments.length === 5,
-          icon: <Newspaper width={18} />,
+          icon: <MessageCircle width={18} />,
         },
         {
           name: "Settings",

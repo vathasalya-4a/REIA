@@ -1,166 +1,128 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
 export default function AIInterview() {
     const [jobTitle, setJobTitle] = useState("");
     const [questions, setQuestions] = useState("");
-    const [interviews, setInterviews] = useState([]);
     const [currentInterviewId, setCurrentInterviewId] = useState(null);
-    const [isEditing, setIsEditing] = useState(false); // Editing mode
-    const [showMenu, setShowMenu] = useState(null); // Dropdown menu state
-    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
-
-    const API_TOKEN = process.env.API_TOKEN;
+    const [loading, setLoading] = useState(false);
+    const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
     const params = useParams();
     const projectId = params.projectid;
 
-    const handleMenuClick = (event, interviewId) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        setMenuPosition({ x: rect.left, y: rect.bottom });
-        setShowMenu(interviewId);
-    };
-
-    const createInterview = async () => {
-        const formData = new FormData();
-        formData.append("jobTitle", String(jobTitle));
-        formData.append("aiPrompt", String(questions));
-    
-        console.log("Sending Request:", {
-            jobTitle,
-            aiPrompt: questions,
-        });
-    
-        try {
-            const response = await fetch("https://recrooai.com/api/ext/post/interview", {
-                method: "POST",
-                headers: {
-                    "authorization": API_TOKEN,
-                },
-                body: formData,
-            });
-    
-            console.log("Status Code:", response.status);
-            console.log("Response Headers:", response.headers);
-    
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error("Error Response:", errorResponse);
-            } else {
-                const createdInterview = await response.json();
-                console.log("Success Response:", createdInterview);
+    useEffect(() => {
+        const fetchProjectInterviewId = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`/api/project-interview?projectId=${projectId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.interviewid) {
+                        setCurrentInterviewId(data.interviewid);
+                        await fetchInterviewDetails(data.interviewid);
+                    }
+                } else {
+                    console.error("Failed to fetch interview ID.");
+                }
+            } catch (error) {
+                console.error("Error fetching project interview ID:", error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error("Network Error:", error);
+        };
+
+        fetchProjectInterviewId();
+    }, [projectId]);
+
+    const fetchInterviewDetails = async (interviewId) => {
+        if (!API_TOKEN) {
+            console.error("API token is missing.");
+            return;
         }
-    };    
-   
-
-    const updateInterview = async (interviewId) => {
-        const formData = new FormData();
-        formData.append("jobTitle", String(jobTitle)); 
-        formData.append("aiPrompt", String(questions));
-
         try {
             const response = await fetch(
-                `https://recrooai.com/api/ext/put/interview/${interviewId}`,
+                `https://recrooai.com/api/ext/get/interview/${interviewId}`,
                 {
-                    method: "PUT",
-                    headers: {
-                        "authorization": API_TOKEN,
-                    },
-                    body: formData,
+                    headers: { authorization: API_TOKEN },
                 }
             );
-
-            const updatedInterview = await response.json();
-
             if (response.ok) {
-                console.log("Interview Updated:", updatedInterview);
-                setInterviews((prev) =>
-                    prev.map((interview) =>
-                        interview.id === interviewId
-                            ? { ...interview, ...updatedInterview }
-                            : interview
-                    )
-                );
+                const interview = await response.json();
+                console.log(interview)
+                setJobTitle(interview.data.jobTitle || "");
+                setQuestions(interview.data.aiPrompt || "");
             } else {
-                console.error("Error:", updatedInterview.error);
+                console.error("Failed to fetch interview details.");
             }
         } catch (error) {
-            console.error("Error updating interview:", error);
+            console.error("Error fetching interview details:", error);
         }
     };
 
-    const handleSave = async () => {
-        if (currentInterviewId) {
-            await updateInterview(currentInterviewId);
-        } else {
-            await createInterview();
-        }
+    const saveInterview = async () => {
+        const formData = new FormData();
+        formData.append("jobTitle", jobTitle);
+        formData.append("aiPrompt", questions);
 
-        setJobTitle("");
-        setQuestions("");
-        setIsEditing(false);
-        setCurrentInterviewId(null);
+        try {
+            const url = currentInterviewId
+                ? `https://recrooai.com/api/ext/put/interview/${currentInterviewId}`
+                : "https://recrooai.com/api/ext/post/interview";
+
+            const method = currentInterviewId ? "PUT" : "POST";
+
+            const response = await fetch(url, {
+                method,
+                headers: { authorization: API_TOKEN },
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                const interviewId = result.data.id;
+                setCurrentInterviewId(interviewId);
+                await saveProjectInterviewId(interviewId);
+
+                setJobTitle(result.jobTitle || jobTitle);
+                setQuestions(result.aiPrompt || questions);
+            } else {
+                console.error("Error:", result.error || "Something went wrong.");
+            }
+        } catch (error) {
+            console.error("Error saving interview:", error);
+        }
     };
 
-    const handleEdit = (interview) => {
-        setJobTitle(interview.jobTitle);
-        setQuestions(interview.aiPrompt);
-        setCurrentInterviewId(interview.id);
-        setIsEditing(true);
+    const saveProjectInterviewId = async (interviewId) => {
+        try {
+            const response = await fetch(`/api/project-interview`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ projectId, interviewid: interviewId }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Error saving project interview ID.");
+            }
+        } catch (error) {
+            console.error("Error saving project interview ID:", error);
+        }
     };
 
     return (
         <div className="overflow-y-auto resize-none custom-scrollbar p-6 relative">
             <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
-                {isEditing ? "" : "Interviews"}
+                Schedule an Interview
             </h1>
-
-            {/* If no interviews */}
-            {!interviews.length && !isEditing && (
-                <div className="mt-12 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white flex flex-col items-center justify-center">
-                    <p className="mt-20 text-lg text-gray-500 text-center">
-                        No Interviews Created Yet. Create One to get Started
-                    </p>
-                    <button
-                        onClick={() => {
-                            setIsEditing(true);
-                            setJobTitle("");
-                            setQuestions("");
-                            setCurrentInterviewId(null);
-                        }}
-                        className="mt-4 px-6 py-3 bg-black text-white rounded-lg mb-20"
-                    >
-                        New Interview
-                    </button>
-                </div>
-            )}
-
-            {/* New Interview Button in top-right corner */}
-            {!isEditing && interviews.length > 0 && (
-                <div className="absolute top-4 right-4">
-                    <button
-                        onClick={() => {
-                            setIsEditing(true);
-                            setJobTitle("");
-                            setQuestions("");
-                            setCurrentInterviewId(null);
-                        }}
-                        className="px-4 py-2 bg-black text-white rounded-lg"
-                    >
-                        New Interview
-                    </button>
-                </div>
-            )}
-
-            {/* Editing Form */}
-            {isEditing && (
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
                 <div className="mt-8 mx-auto w-5/6 p-8">
                     <textarea
-                        className={`w-full mb-4 p-4 text-2xl font-bold rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none ${
+                        className={`w-full mb-4 p-4 text-2xl font-bold rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white ${
                             jobTitle ? "text-black" : "text-gray-400"
                         }`}
                         style={{ minHeight: "80px" }}
@@ -170,63 +132,20 @@ export default function AIInterview() {
                         autoFocus
                     />
                     <textarea
-                        className="w-full p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white overflow-y-auto resize-none placeholder-opacity-80 placeholder-gray-500"
-                        style={{
-                            minHeight: "200px",
-                            lineHeight: "1.5",
-                        }}
-                        placeholder="AI prompt for the interview or leave blank for auto-generated questions."
+                        className="w-full p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white"
+                        style={{ minHeight: "200px", lineHeight: "1.5" }}
+                        placeholder="You may leave this field blank, and the AI will generate interview questions based on the Job Title provided. Alternatively, you can briefly describe how the AI should conduct the interview for this role. For example: 1) Focus on Core Java technical questions tailored to a Senior Developer role. Keep the questions concise and the interview duration short. 2) Conduct the interview using the following job description: [Paste your Job Description here]."
                         value={questions}
                         onChange={(e) => setQuestions(e.target.value)}
                     />
                     <div className="mt-4 flex justify-end">
                         <button
-                            onClick={handleSave}
+                            onClick={saveInterview}
                             className="px-4 py-2 bg-black text-white rounded-lg"
                         >
                             {currentInterviewId ? "Update" : "Save"}
                         </button>
                     </div>
-                </div>
-            )}
-
-            {/* List of Interviews */}
-            {!isEditing && interviews.length > 0 && (
-                <div>
-                    {interviews.map((interview) => (
-                        <div
-                            key={interview.id}
-                            className="mt-8 mx-auto w-5/6 p-4 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white cursor-pointer relative"
-                        >
-                            <h2 className="text-xl font-bold">{interview.jobTitle}</h2>
-                            <p className="text-sm text-gray-500 mt-2">{interview.aiPrompt}</p>
-                            <div className="absolute top-2 right-2">
-                                <button
-                                    onClick={(event) => handleMenuClick(event, interview.id)}
-                                    className="p-2 text-gray-500 hover:text-black"
-                                >
-                                    &#x22EE;
-                                </button>
-                                {showMenu === interview.id && (
-                                    <div
-                                        className="fixed bg-white border rounded-lg shadow-lg"
-                                        style={{
-                                            top: `${menuPosition.y}px`,
-                                            left: `${menuPosition.x}px`,
-                                            zIndex: 50,
-                                        }}
-                                    >
-                                        <button
-                                            onClick={() => handleEdit(interview)}
-                                            className="block px-4 py-2 w-full text-left hover:bg-gray-100"
-                                        >
-                                            Edit
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
                 </div>
             )}
         </div>

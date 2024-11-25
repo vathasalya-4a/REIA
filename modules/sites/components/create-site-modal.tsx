@@ -70,15 +70,32 @@ export default function CreateSiteModal({
             htmlFor="name"
             className="text-sm font-medium text-stone-500 dark:text-stone-400"
           >
-            Candidate Name
+            Name
           </label>
           <input
             name="name"
             type="text"
-            placeholder="candidate name"
+            placeholder="Enter your full name"
             autoFocus
             value={data.name}
             onChange={(e) => setData({ ...data, name: e.target.value })}
+            maxLength={32}
+            required
+            className="w-full rounded-md border border-stone-200 bg-stone-50 px-4 py-2 text-sm text-stone-600 placeholder:text-stone-400 focus:border-black focus:outline-none focus:ring-black dark:border-stone-600 dark:bg-black dark:text-white dark:placeholder-stone-700 dark:focus:ring-white"
+          />
+           <label
+            htmlFor="email"
+            className="text-sm font-medium text-stone-500 dark:text-stone-400"
+          >
+            Email
+          </label>
+          <input
+            name="email"
+            type="text"
+            placeholder="johndoe@example.com"
+            autoFocus
+            value={data.email}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
             maxLength={32}
             required
             className="w-full rounded-md border border-stone-200 bg-stone-50 px-4 py-2 text-sm text-stone-600 placeholder:text-stone-400 focus:border-black focus:outline-none focus:ring-black dark:border-stone-600 dark:bg-black dark:text-white dark:placeholder-stone-700 dark:focus:ring-white"

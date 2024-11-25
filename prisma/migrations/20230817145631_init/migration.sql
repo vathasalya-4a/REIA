@@ -128,16 +128,6 @@ CREATE TABLE "Project" (
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
 
-CREATE TABLE "Interview" (
-    "id" TEXT NOT NULL,
-    "title" TEXT,
-    "questions" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "projectId" TEXT NOT NULL,
-
-    CONSTRAINT "Interview_pkey" PRIMARY KEY ("id")
-);
-
 CREATE TABLE "Candidate" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
