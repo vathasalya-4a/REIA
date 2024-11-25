@@ -2,6 +2,7 @@ import { getSession } from "@/lib/auth";
 import prisma from "@/prisma";
 import { redirect } from "next/navigation";
 import ProjectCard from "./project-card"; // Import your ProjectCard component
+import Image from "next/image";
 
 export default async function Projects({
   clientId, // Receive the clientId as a prop or from URL params
@@ -57,6 +58,12 @@ export default async function Projects({
   ) : (
     <div className="mt-20 flex flex-col items-center space-y-4">
       <h1 className="font-cal text-4xl">No Projects Yet</h1>
+      <Image
+        alt="missing post"
+        src="https://illustrations.popsy.co/gray/graphic-design.svg"
+        width={400}
+        height={400}
+      />
       <p className="text-lg text-stone-500">
         You do not have any Projects for this client yet. Create one to get started.
       </p>
