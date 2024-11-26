@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import LoadingDots from "@/components/icons/loading-dots";
 
 export default function AIInterview() {
     const [jobTitle, setJobTitle] = useState("");
@@ -114,12 +115,15 @@ export default function AIInterview() {
 
     return (
         <div className="overflow-y-auto resize-none custom-scrollbar p-6 relative">
-            <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
+            {loading ? (
+                <div className="flex justify-center items-center mt-8">
+                    <LoadingDots />
+                </div>
+            ) : (
+             <div>
+                 <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
                 Schedule an Interview
             </h1>
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
                 <div className="mt-8 mx-auto w-5/6 p-8">
                     <textarea
                         className={`w-full mb-4 p-4 text-2xl font-bold rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white ${
@@ -147,7 +151,8 @@ export default function AIInterview() {
                         </button>
                     </div>
                 </div>
+                </div>
             )}
         </div>
-    );
+    );    
 }

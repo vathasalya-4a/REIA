@@ -59,7 +59,6 @@ export default async function ClientProjects({
             </div>
           }
         >
-          {/* Pass clientId to Projects component */}
           <Projects clientId={params.id} />
         </Suspense>
       </div>
