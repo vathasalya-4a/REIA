@@ -2,9 +2,9 @@ import { Project } from "@prisma/client";  // Ensure you import Project from Pri
 import { BarChart } from "lucide-react";
 import Link from "next/link";
 
-// Define the type for the data prop explicitly
+
 interface ProjectCardProps {
-  data: Project; // Only the Project data is required here
+  data: Project; 
   clientId: string;
 }
 

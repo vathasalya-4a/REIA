@@ -1,14 +1,14 @@
 import { getSession } from "@/lib/auth";
 import prisma from "@/prisma";
 import { redirect } from "next/navigation";
-import ProjectCard from "./project-card"; // Import your ProjectCard component
+import ProjectCard from "./project-card";
 import Image from "next/image";
 
 export default async function Projects({
-  clientId, // Receive the clientId as a prop or from URL params
+  clientId,
   limit,
 }: {
-  clientId: string; // Pass the clientId as a prop
+  clientId: string;
   limit?: number;
 }) {
   const session = await getSession();
@@ -17,14 +17,13 @@ export default async function Projects({
     redirect("/login");
   }
 
-  // Fetch projects for the logged-in user and a specific client
   const projects = await prisma.project.findMany({
     where: {
-      clientId, // Filter by the clientId
+      clientId,
       client: {
         users: {
           some: {
-            userId: session.user.id, // Ensure the client is associated with the logged-in user
+            userId: session.user.id,
           },
         },
       },
@@ -42,11 +41,12 @@ export default async function Projects({
       startdate: true,
       enddate: true,
       clientId: true,
+      interviewid: true,
     },
     orderBy: {
-      name: "asc", // Order alphabetically
+      name: "asc",
     },
-    ...(limit ? { take: limit } : {}), // Apply limit if provided
+    ...(limit ? { take: limit } : {}),
   });
 
   return projects.length > 0 ? (

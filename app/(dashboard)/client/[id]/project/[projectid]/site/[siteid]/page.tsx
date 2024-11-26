@@ -7,14 +7,13 @@ import prisma from "@/prisma";
 export default async function SitePosts({
   params,
 }: {
-  params: { id?: string; projectid?: string; siteid?: string };
+  params: { id?: string; projectid?: string; siteid?: string }
 }) {
   const session = await getSession();
   if (!session) {
     redirect("/login");
   }
 
-  // Validate required parameters
   const { id, projectid, siteid } = params;
   if (!id || !projectid || !siteid) {
     notFound();
@@ -25,7 +24,6 @@ export default async function SitePosts({
     notFound();
   }
 
-  // Fetch candidate data
   const data = await prisma.candidate.findUnique({
     where: { id: candidateId },
     select: {

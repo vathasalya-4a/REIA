@@ -12,7 +12,7 @@ console.log(pdfjsLib.GlobalWorkerOptions.workerSrc);
 
 export default function ModifyResume() {
   const searchParams = useParams();
-  const { id,resumeid } = searchParams;
+  const { siteid ,resumeid } = searchParams;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [prompt, setPrompt] = useState(false);
@@ -27,13 +27,13 @@ export default function ModifyResume() {
   });
 
   useEffect(() => {
-    if (id && resumeid) {
+    if (siteid && resumeid) {
       setLoading(true);
       setTimeout(() => {
       setLoading(false);
       }, 1000);
     }
-  }, [id, resumeid]);
+  }, [siteid, resumeid]);
 
   const closeToast = () => { setToastMessage("");}
 
@@ -73,9 +73,7 @@ export default function ModifyResume() {
     closeToast();
     
     try {
-
-      // Fetching the Specific Resume and Job Description details using Id's
-      const fetchresponse = await fetch(`/api/upload-resume?CandidateId=${id}&ResumeId=${resumeid}`, {
+      const fetchresponse = await fetch(`/api/upload-resume?CandidateId=${siteid}&ResumeId=${resumeid}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +103,6 @@ export default function ModifyResume() {
       const response = await transformresponse.json();
 
       if (transformresponse.ok) {
-        // Call the second API to generate the Word document
         const generateResponse = await fetch("/api/template", {
           method: "POST",
           headers: {
