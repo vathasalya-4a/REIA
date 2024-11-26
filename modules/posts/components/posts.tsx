@@ -20,7 +20,6 @@ export default async function Posts({
     redirect("/login");
   }
 
-  // Convert candidateId to an integer if it's a string
   const candidateIdInt = typeof candidateId === "string" ? parseInt(candidateId, 10) : candidateId;
 
   if (!candidateIdInt || isNaN(candidateIdInt)) {
@@ -69,7 +68,12 @@ export default async function Posts({
   };
 
   return candidateSerialized.resumes.length > 0 ? (
-    <ResumeTable candidate={candidateSerialized} />
+    <ResumeTable
+    candidate={candidateSerialized}
+    clientId={clientId}
+    projectId={projectId}
+    candidateId={candidateIdInt}
+  />
   ) : (
     <div className="flex flex-col items-center space-x-4">
       <h1 className="font-cal text-4xl">No Resumes Yet</h1>

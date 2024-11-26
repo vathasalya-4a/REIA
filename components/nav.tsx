@@ -73,17 +73,17 @@ export default function Nav({ children }: { children: ReactNode }) {
   }, [id]);
 
   const tabs = useMemo(() => {
-    if (segments[0] === "site" && id && resumeid && segments[3] === "modifyresume") {
+    if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "modifyresume" ) {
       return [
         {
           name: "Back to All Resumes",
-          href: `/site/${id}`,
+          href: `/client/${id}/project/${projectid}/site/${siteid}`,
           icon: <ArrowLeft width={18} />,
         },
         {
           name: "Transform Resume",
-          href: `/site/${id}/${resumeid}/modifyresume`,
-          isActive: segments[3] === "modifyresume",
+          href: `/client/${id}/project/${projectid}/site/${siteid}/${resumeid}/modifyresume`,
+          isActive: segments[6] === "modifyresume",
           icon: <FileEdit width={18} />,
         },
       ];
@@ -198,7 +198,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           name: "AI Interview",
           href: `/client/${id}/project/${projectid}/interview`,
           isActive: segments.length === 5,
-          icon: <Newspaper width={18} />,
+          icon: <MessageCircle width={18} />,
         },
         {
           name: "Settings",

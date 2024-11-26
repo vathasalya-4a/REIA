@@ -21,7 +21,7 @@ export default function AIInterview() {
                     const data = await response.json();
                     if (data.interviewid) {
                         setCurrentInterviewId(data.interviewid);
-                        await fetchInterviewDetails(data.interviewid);
+                        await fetchInterviewId(data.interviewid);
                     }
                 } else {
                     console.error("Failed to fetch interview ID.");
@@ -36,7 +36,7 @@ export default function AIInterview() {
         fetchProjectInterviewId();
     }, [projectId]);
 
-    const fetchInterviewDetails = async (interviewId) => {
+    const fetchInterviewId = async (interviewId) => {
         if (!API_TOKEN) {
             console.error("API token is missing.");
             return;

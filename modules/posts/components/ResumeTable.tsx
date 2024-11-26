@@ -26,7 +26,17 @@ interface Candidate {
   atsScores: ATS_Score[];
 }
  
-export default function ResumeTable({ candidate }: { candidate: Candidate }) {
+export default function ResumeTable({
+  candidate,
+  clientId,
+  projectId,
+  candidateId,
+}: {
+  candidate: Candidate;
+  clientId?: string;
+  projectId?: string;
+  candidateId?: number;
+}) {
   const [openSummaryIndex, setOpenSummaryIndex] = useState<number | null>(null);
   const [showJobDescription, setShowJobDescription] = useState<number | null>(null);
   const [jobDescriptionText, setJobDescriptionText] = useState<string>("");
@@ -51,14 +61,6 @@ export default function ResumeTable({ candidate }: { candidate: Candidate }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
- 
-  // // Reload page on load if redirected from another page
-  // useEffect(() => {
-  //   const handlePageReload = () => {
-  //     router.refresh();
-  //   }
-  //     handlePageReload();
-  //   }, []);
    
  
   const handleDropdownToggle = (index: number) => {
@@ -69,8 +71,8 @@ export default function ResumeTable({ candidate }: { candidate: Candidate }) {
     setOpenSummaryIndex(index);
   };
  
-  const handleModifyResumeClick = (candidateId: number, resumeId: number) => {
-    router.push(`/site/${candidateId}/${resumeId}/modifyresume`);
+  const handleModifyResumeClick = (clientId: string, projectId: string, candidateId: number, resumeId: number) => {
+    router.push(`/client/${clientId}/project/${projectId}/site/${candidateId}/${resumeId}/modifyresume`);
   };
  
  /* const handleViewModifiedResumesClick = (candidateId: number, resumeId: number) => {
@@ -203,7 +205,7 @@ export default function ResumeTable({ candidate }: { candidate: Candidate }) {
                         </a>
                         <button
                           className="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                          onClick={() => handleModifyResumeClick(candidate.id, resume.id)}
+                          onClick={() => handleModifyResumeClick(clientId, projectId, candidate.id, resume.id)}
                         >
                           Transform Resume
                         </button>

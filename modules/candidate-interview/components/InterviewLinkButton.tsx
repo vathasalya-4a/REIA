@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { fetchInterviewDetails } from "../actions";
+import { fetchInterviewId, fetchCandidateEmail } from "../actions";
 
 interface ButtonProps {
     projectId: string;
@@ -11,10 +11,10 @@ interface ButtonProps {
 export default function InterviewLinkButton({ projectId, candidateId }: ButtonProps) {
     const handleClick = async () => {
         try {
-            const { interviewId, email } = await fetchInterviewDetails(projectId, candidateId);
+            const interviewId = await fetchInterviewId(projectId);
+            const email = await fetchCandidateEmail(candidateId);
 
             if (interviewId && email) {
-                // Simulate sending the interview link to the email
                 alert(`Interview Link Sent! Interview ID: ${interviewId}, Email: ${email}`);
             } else {
                 alert("Failed to fetch the interview details.");

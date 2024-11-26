@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function fetchInterviewDetails(projectId: string, candidateId: string): Promise<{ interviewId: string | null; email: string | null }> {
+export async function fetchInterviewId(projectId: string): Promise<string | null> {
     try {
         const project = await prisma.project.findUnique({
             where: { id: projectId },
@@ -13,8 +13,18 @@ export async function fetchInterviewDetails(projectId: string, candidateId: stri
 
         if (!project || !project.interviewid) {
             console.error(`No interviewId found for projectId: ${projectId}`);
+            return null;
         }
 
+        return project.interviewid;
+    } catch (error) {
+        console.error(`Error fetching interviewId for projectId: ${projectId}`, error);
+        return null;
+    }
+}
+
+export async function fetchCandidateEmail(candidateId: string): Promise<string | null> {
+    try {
         const candidate = await prisma.candidate.findUnique({
             where: { id: parseInt(candidateId) },
             select: { email: true },
@@ -22,14 +32,12 @@ export async function fetchInterviewDetails(projectId: string, candidateId: stri
 
         if (!candidate || !candidate.email) {
             console.error(`No email found for candidateId: ${candidateId}`);
+            return null;
         }
 
-        return {
-            interviewId: project?.interviewid || null,
-            email: candidate?.email || null,
-        };
+        return candidate.email;
     } catch (error) {
-        console.error(`Error fetching interview details for projectId: ${projectId} and candidateId: ${candidateId}`, error);
-        return { interviewId: null, email: null };
+        console.error(`Error fetching email for candidateId: ${candidateId}`, error);
+        return null;
     }
 }

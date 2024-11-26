@@ -41,8 +41,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Update the interviewid for the specified project
     const updatedProject = await prisma.project.update({
       where: { id: projectId },
       data: { interviewid },
