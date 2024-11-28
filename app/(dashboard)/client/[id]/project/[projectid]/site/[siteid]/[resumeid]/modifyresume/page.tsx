@@ -65,7 +65,7 @@ export default function ModifyResume() {
 
   const transformresume = async () => {
     setLoading(true);
-    if (!form.TaskID || !form.ResourceType || !form.CATSLaborCategory || !form.Template) {
+   if (!form.TaskID || !form.ResourceType || !form.CATSLaborCategory || !form.Template) {
       setToastMessage("Please fill all the required fields to transform the resume")
       setLoading(false);
       return;
@@ -100,9 +100,9 @@ export default function ModifyResume() {
         }),
       });
 
-      const response = await transformresponse.json();
+      const response = await transformresponse.json(); 
 
-      if (transformresponse.ok) {
+
         const generateResponse = await fetch("/api/template", {
           method: "POST",
           headers: {
@@ -118,19 +118,17 @@ export default function ModifyResume() {
         });
     
         const generateResult = await generateResponse.json();
+        console.log(generateResult);
     
         if (generateResponse.ok) {
-          console.log('File generated:', generateResult.path);
+          console.log('File generated:', generateResult.pdfUrl);
     
-          setPdfData(generateResult.path);
+          setPdfData(generateResult.pdfUrl);
         } else {
           console.error('Error generating file:', generateResult.message);
         }
-      } else {
-        console.error('Error in modify resume API:', response.message);
-      }
     }
-     catch (error ) {
+    catch (error ) {
       console.error("Error during submission:", error);
       setToastMessage("Failed to transform resume. Please try again.");
     } finally {
@@ -202,7 +200,7 @@ export default function ModifyResume() {
                 onChange={(e) => setform({ ...form, Template: e.target.value })}>
                 <option>Select Template</option>
                 <option>4A Resume Template</option>
-                <option>B Summary</option>
+                <option>B_Summary</option>
               </select>
             </label>
           </div>
@@ -300,7 +298,7 @@ export default function ModifyResume() {
             <a
               href={pdfData}
               download="generated_resume.pdf"
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
+              className="bg-black hover:bg-green-700 text-white font-bold py-2 px-6 rounded"
             >
               Download Resume
             </a>
