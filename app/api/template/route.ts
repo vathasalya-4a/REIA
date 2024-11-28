@@ -9,7 +9,7 @@ import axios from 'axios';
 // Load environment variables
 dotenv.config();
 
-const CLOUDMERSIVE_API_KEY = 'a5323ef1-f3d4-4a1d-a244-1c8a6af3e729';
+const CLOUDMERSIVE_API_KEY = process.env.CONVERT_PDF_KEY;
 
 export async function POST(req: NextRequest) {
   try {
