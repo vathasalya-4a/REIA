@@ -6,7 +6,6 @@ import path from 'path';
 import dotenv from 'dotenv';
 import axios from 'axios';
 
-// Load environment variables
 dotenv.config();
 
 const CLOUDMERSIVE_API_KEY = process.env.CONVERT_PDF_KEY;
@@ -51,24 +50,22 @@ export async function POST(req: NextRequest) {
     console.log('The Word file has been saved successfully.');
 
     // Convert DOCX to PDF using Cloudmersive API
-    try {
-      const fileBuffer = await fs.readFile(outputPath); // Buffer containing the DOCX file
+   try {
+      const fileBuffer = await fs.readFile(outputPath);
       const pdfOutputPath = path.join(process.cwd(), 'public', 'generated', `${updatedFileName}.pdf`);
 
-      // Make API request to Cloudmersive
       const response = await axios.post(
         'https://api.cloudmersive.com/convert/docx/to/pdf',
         fileBuffer,
         {
           headers: {
             'Content-Type': 'application/octet-stream',
-            Apikey: CLOUDMERSIVE_API_KEY, // API Key
+            Apikey: CLOUDMERSIVE_API_KEY,
           },
-          responseType: 'arraybuffer', // To receive the response as a buffer
+          responseType: 'arraybuffer',
         }
       );
 
-      // Save the PDF file locally
       await fs.writeFile(pdfOutputPath, response.data);
       console.log('PDF generated successfully using Cloudmersive.');
 
@@ -85,7 +82,7 @@ export async function POST(req: NextRequest) {
     } catch (error) {
       console.error('Error during PDF conversion:', error.response?.data || error.message);
       return NextResponse.json({ message: 'Error during PDF conversion' }, { status: 500 });
-    }
+    } 
   } catch (error) {
     console.error('Error processing request:', error);
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });

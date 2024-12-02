@@ -16,7 +16,7 @@ Resume text in plain text format:
    - Experience:
      - Extract job titles, companies, dates of employment, responsibilities (make sure all the points are present if there 10 points specified in an experience keep all the points do not remove the points ), and technologies mentioned.
    - Skills: Group skills by categories (e.g., Programming, Tools) if possible.
-   - Education: Include university, degree, and dates (correct grammar but retain original details).
+   - Education: Include degree, university name in the degree section and year (correct grammar but retain original details) in the dates section
    - Certifications: Include certificate names, institutions, and dates.
 3. Include null or empty values for missing sections.
 4. Standardize date formats (e.g., "Jan 2020 - Dec 2022").
@@ -35,7 +35,7 @@ Resume text in plain text format:
   ],
   "education": [
     {
-      "university&degree": "string",
+      "degree": "string",
       "dates": "string"
     }
   ],

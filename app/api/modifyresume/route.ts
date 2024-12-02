@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
         },
         { role: "user", content: schemaPrompt },
       ],
+      temperature: 0,
     });
 
     return NextResponse.json(response.choices[0].message?.content);
