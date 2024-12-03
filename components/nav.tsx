@@ -18,7 +18,8 @@ import {
   Settings,
   FileEdit,
   MessageCircle,
-  ContactIcon
+  ContactIcon,
+  CalendarClock,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -303,7 +304,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Calendar",
         href: "/calendar",
         isActive: segments[0] === "calendar",
-        icon: <User width={18} />,
+        icon: <CalendarClock width={18} />,
       },
       {
         name: "Settings",

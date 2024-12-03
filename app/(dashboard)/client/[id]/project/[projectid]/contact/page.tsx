@@ -1,60 +1,44 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { retrieveCandidates } from "@/modules/contact/actions";
+import React, { useState } from "react";
 import LoadingDots from "@/components/icons/loading-dots";
 import { SendIcon, PhoneCallIcon } from "lucide-react";
 
 export default function Contact() {
-    const [candidates, setCandidates] = useState([]);
-    const [selectedCandidate, setSelectedCandidate] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [communicationType, setCommunicationType] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [callStatus, setCallStatus] = useState("");
 
-    useEffect(() => {
-        const fetchCandidates = async () => {
-            try {
-                const data = await retrieveCandidates();
-                setCandidates(data);
-            } catch (error) {
-                console.error("Failed to fetch candidates:", error);
-            }
-        };
-        fetchCandidates();
-    }, []);
-
     const handleSendMessage = async () => {
         setLoading(true);
         setCallStatus("");
-    
+
         try {
-            // Construct the request body dynamically
             const requestBody: {
-                candidateId: string;
+                phoneNumber: string;
                 communicationType: string;
                 message?: string; // Optional property
             } = {
-                candidateId: selectedCandidate,
+                phoneNumber,
                 communicationType,
             };
-    
-            // Add message only for Text Message
+
             if (communicationType === "Text Message") {
                 requestBody.message = message;
             }
-    
+
             const response = await fetch("/api/send-message", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(requestBody),
             });
-    
+
             if (!response.ok) throw new Error("Failed to send message");
-    
+
             const data = await response.json();
-    
+
             if (communicationType === "Call") {
                 setCallStatus(data.callStatus || "Call in progress...");
             } else {
@@ -66,12 +50,12 @@ export default function Contact() {
         } finally {
             setLoading(false);
         }
-    };    
+    };
 
     return (
         <div className="overflow-y-auto resize-none custom-scrollbar p-6 relative">
             <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
-                Contact a Candidate
+                Contact via Phone
             </h1>
             <div className="mt-6 mx-auto w-5/6 p-9 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
                 <form
@@ -81,21 +65,15 @@ export default function Contact() {
                     }}
                 >
                     <label className="block mb-2 text-sm font-medium">
-                        Select Candidate
+                        Phone Number
                     </label>
-                    <select
+                    <input
+                        type="text"
                         className="block w-full p-2 mb-4 border rounded"
-                        value={selectedCandidate}
-                        onChange={(e) => setSelectedCandidate(e.target.value)}
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
                         required
-                    >
-                        <option value="">Select a candidate</option>
-                        {candidates.map((candidate) => (
-                            <option key={candidate.id} value={candidate.id}>
-                                {candidate.name}
-                            </option>
-                        ))}
-                    </select>
+                    />
 
                     <label className="block mb-2 text-sm font-medium">
                         Communication Type

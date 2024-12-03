@@ -11,29 +11,15 @@ const plivoClient = new PlivoClient(
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { candidateId, message, communicationType } = body;
+        const { phoneNumber, message, communicationType } = body;
 
         // Validate required fields
-        if (!candidateId || !communicationType) {
+        if (!phoneNumber || !communicationType) {
             return NextResponse.json(
                 { error: "Missing required fields" },
                 { status: 400 }
             );
         }
-
-        const candidate = await prisma.candidate.findUnique({
-            where: { id: parseInt(candidateId, 10) },
-            select: { phone: true },
-        });
-
-        if (!candidate) {
-            return NextResponse.json(
-                { error: "Candidate not found" },
-                { status: 404 }
-            );
-        }
-
-        const candidatePhone = candidate.phone;
 
         if (communicationType === "Text Message") {
             if (!message) {
@@ -53,7 +39,7 @@ export async function POST(req: Request) {
                 body: JSON.stringify({
                     content: message,
                     from: "+15138355803",
-                    to: candidatePhone,
+                    to: phoneNumber,
                 }),
             });
 
@@ -68,18 +54,16 @@ export async function POST(req: Request) {
             );
         } else if (communicationType === "Call") {
             const answerUrl = "https://callxml.s3.us-east-2.amazonaws.com/callurl.xml";
-        
-            console.log("Generated answer_url:", answerUrl);
-        
+
             const callResponse = await plivoClient.calls.create(
                 "+19179148741",
-                "5138355803", 
+                phoneNumber,
                 answerUrl,
                 {
                     answer_method: "GET",
                 }
             );
-        
+
             if (callResponse.apiId) {
                 return NextResponse.json(
                     { callStatus: "Call initiated successfully" },
@@ -88,8 +72,7 @@ export async function POST(req: Request) {
             } else {
                 throw new Error("Failed to initiate call");
             }
-        }
-         else {
+        } else {
             return NextResponse.json(
                 { error: "Invalid communication type" },
                 { status: 400 }
@@ -102,4 +85,3 @@ export async function POST(req: Request) {
         );
     }
 }
-

@@ -27,13 +27,7 @@ export default async function ClientSettingsIndex({
           placeholder: "My Awesome Site",
           maxLength: 32,
         }}
-        handleSubmit={(formData) => {
-          const formDataObj = new FormData();
-          Object.entries(formData).forEach(([key, value]) => {
-            formDataObj.append(key, value);
-          });
-          updateClient(data?.id!, formDataObj);
-        }}
+        handleSubmit={updateClient}
       />
 
       <Form
@@ -46,14 +40,9 @@ export default async function ClientSettingsIndex({
           defaultValue: data?.state!,
           placeholder: "A blog about really interesting things.",
         }}
-        handleSubmit={(formData) => {
-          const formDataObj = new FormData();
-          Object.entries(formData).forEach(([key, value]) => {
-            formDataObj.append(key, value);
-          });
-          updateClient(data?.id!, formDataObj);
-        }}
+        handleSubmit={updateClient}
       />
+
       <DeleteClientForm clientName={data?.name!} />
     </div>
   );
