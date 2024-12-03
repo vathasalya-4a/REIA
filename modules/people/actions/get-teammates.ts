@@ -3,9 +3,9 @@
 import prisma from "@/prisma";
 
 export const getTeammates = async (siteId: string) => {
-  const users = await prisma.siteUser.findMany({
+  const users = await prisma.clientUser.findMany({
     where: {
-      siteId,
+      clientId: siteId,
     },
     select: {
       user: {

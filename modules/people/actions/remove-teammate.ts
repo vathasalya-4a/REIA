@@ -9,10 +9,10 @@ export const removeTeammate = async (userId: string, siteId: string) => {
       status: 400,
     };
   }
-  const siteUser = await prisma.siteUser.findUnique({
+  const clientUser = await prisma.clientUser.findUnique({
     where: {
-      userId_siteId: {
-        siteId,
+      userId_clientId: {
+        clientId: siteId,
         userId,
       },
     },
@@ -20,17 +20,17 @@ export const removeTeammate = async (userId: string, siteId: string) => {
       role: true,
     },
   });
-  if (siteUser?.role === "owner") {
+  if (clientUser?.role === "owner") {
     return {
       error:
         "Cannot remove owner from site. Please transfer ownership to another user first.",
       status: 400,
     };
   }
-  const response = await prisma.siteUser.delete({
+  const response = await prisma.clientUser.delete({
     where: {
-      userId_siteId: {
-        siteId,
+      userId_clientId: {
+        clientId: siteId,
         userId,
       },
     },

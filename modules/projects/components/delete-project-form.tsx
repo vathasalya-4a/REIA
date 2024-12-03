@@ -9,22 +9,22 @@ import va from "@vercel/analytics";
 import { deleteProject } from "../actions";
 
 export default function DeleteProjectForm({ projectName }: { projectName: string }) {
-  const { projectid } = useParams() as { projectid: string };
+  const { id, projectid } = useParams() as { id : string, projectid: string };
   const router = useRouter();
 
   return (
     <form
       action={async (data: FormData) => {
-        if (window.confirm("Are you sure you want to delete your site?")) {
+        if (window.confirm("Are you sure you want to delete your project?")) {
           await deleteProject(projectid, data, "delete")
             .then(async (res: any) => {
               if (res.error) {
                 toast.error(res.error);
               } else {
-                va.track("Deleted Site");
+                va.track("Deleted Project");
                 router.refresh();
-                router.push("/sites");
-                toast.success(`Successfully deleted site!`);
+                router.push(`/client/${id}`);
+                toast.success(`Successfully deleted project!`);
               }
             })
             .catch((err: Error) => toast.error(err.message));
@@ -35,7 +35,7 @@ export default function DeleteProjectForm({ projectName }: { projectName: string
       className="rounded-lg border border-red-600 bg-white dark:bg-black"
     >
       <div className="relative flex flex-col space-y-4 p-5 sm:p-10">
-        <h2 className="font-cal text-xl dark:text-white">Delete Site</h2>
+        <h2 className="font-cal text-xl dark:text-white">Delete Project</h2>
         <p className="text-sm text-stone-500 dark:text-stone-400">
           Deletes your project and all candidates associated with it. Type in the name
           of your client <b>{projectName}</b> to confirm.

@@ -10,11 +10,11 @@ export const removeInvite = async (email: string, siteId: string) => {
     };
   }
 
-  const siteInvite = await prisma.siteInvite.findUnique({
+  const clientInvite = await prisma.clientInvite.findUnique({
     where: {
-      email_siteId: {
+      email_clientId: {
         email,
-        siteId,
+        clientId: siteId,
       },
     },
     select: {
@@ -22,7 +22,7 @@ export const removeInvite = async (email: string, siteId: string) => {
     },
   });
 
-  if (!siteInvite?.email) {
+  if (!clientInvite?.email) {
     return {
       error:
         "Didn't find an invite with that email. Please refresh the page and try again.",
@@ -30,11 +30,11 @@ export const removeInvite = async (email: string, siteId: string) => {
     };
   }
 
-  const response = await prisma.siteInvite.delete({
+  const response = await prisma.clientInvite.delete({
     where: {
-      email_siteId: {
+      email_clientId: {
         email,
-        siteId,
+        clientId: siteId,
       },
     },
   });

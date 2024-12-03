@@ -10,10 +10,10 @@ export const setRole = async (userId: string, siteId: string, role: string) => {
     };
   }
 
-  const response = await prisma.siteUser.update({
+  const response = await prisma.clientUser.update({
     where: {
-      userId_siteId: {
-        siteId,
+      userId_clientId: {
+        clientId: siteId,
         userId,
       },
     },

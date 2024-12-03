@@ -15,10 +15,13 @@ export default async function ProjectSettingsIndex({
   });
 
   return (
-    <div className="flex flex-col space-y-6">
+    <div className="flex flex-col space-y-6 p-8">
+      <h1 className="font-cal text-xl font-bold dark:text-white sm:text-3xl">
+          Settings for {data.name}
+        </h1>
       <Form
         title="Name"
-        description="The name of your client. This will be used as the meta title on Google as well."
+        description="The name of your project. This will be used as the meta title on Google as well."
         helpText="Please use 32 characters maximum."
         inputAttrs={{
           name: "name",

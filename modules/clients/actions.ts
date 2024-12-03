@@ -33,7 +33,7 @@ export const createClient = async (formData: FormData) => {
         client: {
           connect: { id: client.id }, // Connect the created Client
         },
-        role: "admin", // Default role
+        role: "owner", // Default role
       },
     });
 

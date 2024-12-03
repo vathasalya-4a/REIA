@@ -50,6 +50,12 @@ export default async function Clients({ limit }: { limit?: number }) {
       ) : (
         <div className="mt-20 flex flex-col items-center space-x-4">
           <h1 className="font-cal text-4xl">No Clients Yet</h1>
+          <Image
+        alt="missing post"
+        src="https://illustrations.popsy.co/gray/graphic-design.svg"
+        width={400}
+        height={400}
+      />
           <p className="text-lg text-stone-500">
             You do not have any Clients yet. Create one to get started.
           </p>

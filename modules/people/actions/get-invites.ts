@@ -3,9 +3,11 @@
 import prisma from "@/prisma";
 
 export const getInvites = async (siteId: string) => {
-  const invites = await prisma.siteInvite.findMany({
+  const invites = await prisma.clientInvite.findMany({
     where: {
-      siteId,
+      client: {
+        id: siteId,
+      },
     },
     select: {
       email: true,

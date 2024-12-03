@@ -14,16 +14,16 @@ export const acceptInvite = withUserAuth(async (siteId: string) => {
 
   const session = await getSession();
 
-  const invite = await prisma.siteInvite.findFirst({
+  const invite = await prisma.clientInvite.findFirst({
     where: {
       email: session?.user?.email,
-      site: {
+      client: {
         id: siteId,
       },
     },
     select: {
       expires: true,
-      siteId: true,
+      clientId: true,
     },
   });
   if (!invite) {
@@ -38,18 +38,18 @@ export const acceptInvite = withUserAuth(async (siteId: string) => {
     };
   } else {
     const response = await Promise.all([
-      prisma.siteUser.create({
+      prisma.clientUser.create({
         data: {
           userId: session?.user?.id || "",
           role: "member",
-          siteId: invite.siteId,
+          clientId: invite.clientId,
         },
       }),
-      prisma.siteInvite.delete({
+      prisma.clientInvite.delete({
         where: {
-          email_siteId: {
+          email_clientId: {
             email: session?.user?.email || "",
-            siteId: invite.siteId,
+            clientId: invite.clientId,
           },
         },
       }),

@@ -8,7 +8,8 @@ import LoginLink from "@/modules/emails/templates/login-link";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 const environment = process.env.NODE_ENV;
-console.log(environment)
+
+console.log(environment);
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -18,10 +19,8 @@ export const authOptions: NextAuthOptions = {
         if (environment === "development") {
           console.log(`Login link: ${url}`);
         } else {
-          console.log("sending Email");
-          console.log(identifier);
-          url = "https://reia-production-0908.up.railway.app/api/auth/callback/email?callbackUrl=https%3A%2F%2Freia-production-0908.up.railway.app%2Flogin&token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&email=youremail@gmail.com",
-          console.log(url)
+          console.log("Sending email...");
+          console.log("Recipient:", identifier);
 
           await sendEmail({
             email: identifier,
@@ -33,13 +32,13 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: "/login",
-    verifyRequest: "/login",
-    error: "/login",
+    signIn: "/login", // Custom sign-in page
+    verifyRequest: "/login", // Verification request notification
+    error: "/login", // Redirect to the login page on errors
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma), // Prisma adapter to connect to the database
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // Use JWT for sessions
   },
   cookies: {
     sessionToken: {
@@ -57,23 +56,45 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }: any) {
+      // If the user logs in, attach their details to the token
       if (user) {
         token.user = user;
+
+        // Check if the user has a Cal.com username
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser?.calcomUsername) {
+          // Generate a Cal.com username from the user's email
+          const calcomUsername = user.email.split("@")[0];
+
+          // Update the user record in the database
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { calcomUsername },
+          });
+
+          console.log(`Generated Cal.com username: ${calcomUsername}`);
+        }
       }
+
       return token;
     },
     async session({ session, token }: any) {
+      // Attach the user's ID and email to the session object
       session.user = {
         ...session.user,
-        id: token.sub,
-        email: token?.user?.email,
+        id: token.sub, // Add the user ID from the token
+        email: token?.user?.email || token.email || session.user?.email, // Ensure the email is always populated
       };
       return session;
     },
   },
-  debug: true,
+  debug: true, // Enable debug mode for NextAuth
 };
 
+// Helper function to get the server session
 export function getSession() {
   return getServerSession(authOptions) as Promise<{
     user: {

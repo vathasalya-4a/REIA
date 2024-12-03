@@ -180,7 +180,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         },
         {
           name: "Settings",
-          href: `/client/${id}/settings`,
+          href: `/client/${id}/project/${projectid}/site/${siteid}/settings`,
           isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
         },
@@ -245,7 +245,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         },
         {
           name: "Settings",
-          href: `/client/${id}/settings`,
+          href: `/client/${id}/project/${projectid}/settings`,
           isActive: segments.includes("settings"),
           icon: <Settings width={18} />,
         },
@@ -297,6 +297,12 @@ export default function Nav({ children }: { children: ReactNode }) {
         name: "Clients",
         href: "/clients",
         isActive: segments[0] === "clients" || segments.length === 0,
+        icon: <User width={18} />,
+      },
+      {
+        name: "Calendar",
+        href: "/calendar",
+        isActive: segments[0] === "calendar",
         icon: <User width={18} />,
       },
       {

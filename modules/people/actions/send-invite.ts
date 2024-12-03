@@ -16,19 +16,19 @@ export const sendInvite = async (email: string, siteId: string) => {
   //   const { email } = req.body;
   const session = await getSession();
 
-  const site = await prisma.site.findUnique({
+  const client = await prisma.client.findUnique({
     where: { id: siteId },
   });
 
-  if (!site) {
+  if (!client) {
     return {
       error: "Site not found.",
     };
   }
 
-  const alreadyInTeam = await prisma.siteUser.findFirst({
+  const alreadyInTeam = await prisma.clientUser.findFirst({
     where: {
-      siteId: site.id,
+      clientId: client.id,
       user: {
         email,
       },
@@ -73,11 +73,11 @@ export const sendInvite = async (email: string, siteId: string) => {
   // here we use a try catch to account for the case where the user has already been invited
   // for which `prisma.siteInvite.create()` will throw a unique constraint error
   try {
-    await prisma.siteInvite.create({
+    await prisma.clientInvite.create({
       data: {
         email,
         expires,
-        siteId: site.id,
+        clientId: client.id,
       },
     });
 
@@ -90,7 +90,7 @@ export const sendInvite = async (email: string, siteId: string) => {
     });
 
     const params = new URLSearchParams({
-      callbackUrl: `${process.env.NEXTAUTH_URL}/site/${site.id}`,
+      callbackUrl: `${process.env.NEXTAUTH_URL}/site/${client.id}`,
       email,
       token,
     });
@@ -103,7 +103,7 @@ export const sendInvite = async (email: string, siteId: string) => {
       react: SiteInvite({
         email,
         url,
-        siteName: site.name || "",
+        siteName: client.name || "",
         siteUser: session?.user?.name || "",
         siteUserEmail: session?.user?.email || "",
       }),
