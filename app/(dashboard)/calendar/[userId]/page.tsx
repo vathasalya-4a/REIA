@@ -1,4 +1,6 @@
-import { prisma } from "@/prisma";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default async function UserCalendarPage({ params }: { params: { userId: string } }) {
   const user = await prisma.user.findUnique({
@@ -20,11 +22,11 @@ export default async function UserCalendarPage({ params }: { params: { userId: s
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">User's Calendar</h1>
+      <h1 className="text-2xl font-bold mb-6">User&apos;s Calendar</h1> {/* Fixed the apostrophe */}
       <iframe
         src={calcomUrl}
         style={{ width: "100%", height: "800px", border: "none" }}
-        title="User's Cal.com Calendar"
+        title="User&apos;s Cal.com Calendar"
       />
     </div>
   );

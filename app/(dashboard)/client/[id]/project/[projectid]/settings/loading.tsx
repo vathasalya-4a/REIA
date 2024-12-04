@@ -1,29 +1,12 @@
-// app/(dashboard)/layout.tsx
+import LoadingDots from "@/components/icons/loading-dots";
 
-import { ReactNode, Suspense } from "react";
-import Profile from "@/components/profile";
-import Nav from "@/components/nav";
-import { getSession } from "@/lib/auth"; // Import getSession function
-import { redirect } from "next/navigation";
-
-export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  // Retrieve the session
-  const session = await getSession();
-
-  // If there's no session, redirect to the login page
-  if (!session) {
-    redirect("/login");
-  }
-
-  // Render the dashboard layout for authenticated users
+export default function Loading() {
   return (
-    <div>
-      <Nav>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Profile />
-        </Suspense>
-      </Nav>
-      <div className="min-h-screen dark:bg-black sm:pl-60">{children}</div>
-    </div>
+    <>
+      <div className="h-10 w-48 animate-pulse rounded-md bg-stone-100 dark:bg-stone-800" />
+      <div className="flex h-full w-full items-center justify-center">
+        <LoadingDots />
+      </div>
+    </>
   );
 }

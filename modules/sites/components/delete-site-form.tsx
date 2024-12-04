@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
 import va from "@vercel/analytics";
-import { deleteSite } from "../actions";
+import { deleteCandidate } from "../actions";
 
 export default function DeleteSiteForm({ siteName }: { siteName: string }) {
   const { id } = useParams() as { id: string };
@@ -16,7 +16,7 @@ export default function DeleteSiteForm({ siteName }: { siteName: string }) {
     <form
       action={async (data: FormData) => {
         if (window.confirm("Are you sure you want to delete your candidate?")) {
-          await deleteSite(id, data, "delete")
+          await deleteCandidate(parseInt(id))
             .then(async (res: any) => {
               if (res.error) {
                 toast.error(res.error);

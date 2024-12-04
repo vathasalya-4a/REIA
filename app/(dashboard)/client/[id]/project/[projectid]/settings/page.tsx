@@ -1,7 +1,7 @@
 import prisma from "@/prisma";
 import Form from "@/components/form";
 import { updateProject } from "@/modules/projects/actions";
-import  DeleteProjectForm  from "@/modules/projects/components/delete-project-form"
+import DeleteProjectForm from "@/modules/projects/components/delete-project-form";
 
 export default async function ProjectSettingsIndex({
   params,
@@ -14,11 +14,21 @@ export default async function ProjectSettingsIndex({
     },
   });
 
+  if (!data) {
+    return (
+      <div className="flex flex-col space-y-6 p-8">
+        <h1 className="font-cal text-xl font-bold dark:text-white sm:text-3xl">
+          Project not found
+        </h1>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col space-y-6 p-8">
       <h1 className="font-cal text-xl font-bold dark:text-white sm:text-3xl">
-          Settings for {data.name}
-        </h1>
+        Settings for {data.name}
+      </h1>
       <Form
         title="Name"
         description="The name of your project. This will be used as the meta title on Google as well."
@@ -26,13 +36,15 @@ export default async function ProjectSettingsIndex({
         inputAttrs={{
           name: "name",
           type: "text",
-          defaultValue: data?.name!,
-          placeholder: "My Awesome Site",
+          defaultValue: data.name,
+          placeholder: "My Awesome Project",
           maxLength: 32,
         }}
         handleSubmit={updateProject}
+        id={data.id} 
+        idType="project"
       />
-      <DeleteProjectForm projectName={data?.name!} />
+      <DeleteProjectForm projectName={data.name} />
     </div>
   );
 }

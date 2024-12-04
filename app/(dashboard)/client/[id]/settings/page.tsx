@@ -28,6 +28,8 @@ export default async function ClientSettingsIndex({
           maxLength: 32,
         }}
         handleSubmit={updateClient}
+        id={data.id} 
+        idType="project"
       />
 
       <Form
@@ -41,6 +43,8 @@ export default async function ClientSettingsIndex({
           placeholder: "A blog about really interesting things.",
         }}
         handleSubmit={updateClient}
+        id={data.id} 
+        idType="project"
       />
 
       <DeleteClientForm clientName={data?.name!} />
