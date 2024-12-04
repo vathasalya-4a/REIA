@@ -209,12 +209,12 @@ export default function ResumeTable({
                         >
                           Transform Resume
                         </button>
-                        <button
+                      { /* <button
                           className="flex items-center px-4 py-1 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                           //onClick={() => handleViewModifiedResumesClick(candidate.id, resume.id)}
                         >
                           View Transformed Resumes
-                        </button>
+                        </button>*/}
                         <button
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                           onClick={() => {
