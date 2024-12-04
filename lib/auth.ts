@@ -37,8 +37,14 @@ export const authOptions: NextAuthOptions = {
           console.log(`Login link (production): ${updatedUrl}`);
           console.log("Sending email...");
           console.log("Recipient:", identifier);
-
-         
+          await sendEmail({
+            email: identifier,
+            subject: "Your Login Link",
+            react: LoginLink({
+              url: updatedUrl,
+              email: identifier,
+            }),
+          });
         }
       },
     }),
