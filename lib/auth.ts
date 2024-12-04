@@ -19,7 +19,7 @@ export const authOptions: NextAuthOptions = {
         if (environment === "development") {
           console.log(`Login link: ${url}`);
         } else {
-          const url =  `https://reia.up.railway.app/api/auth/callback/email?callbackUrl=https%3A%2F%2Freia.up.railway.app%2Flogin&token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&email=${encodeURIComponent(identifier)}`
+          const url =  `https://reia.up.railway.app/api/auth/callback/email?callbackUrl=https%3A%2F%2Freia.up.railway.app%2Flogin&token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&email=youremail@gmail.com`
           console.log("Sending email...");
           console.log("Recipient:", identifier);
           await sendEmail({

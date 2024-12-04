@@ -16,7 +16,7 @@ import { PLATFORMS_LOGO } from "@/lib/constants";
 
 export default function LoginLink({
   email = "panic@thedis.co",
-  url,
+  url = "https://reia.up.railway.app/api/auth/callback/email?callbackUrl=https%3A%2F%2Freia.up.railway.app%2Flogin&token=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&email=youremail@gmail.com",
 }: {
   email: string;
   url: string;
