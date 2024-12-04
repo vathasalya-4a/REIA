@@ -121,14 +121,14 @@ export default function CheckATS() {
   };
 
   const extractText = async (file: File) => {
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-
+    const fileExtension = file.name.split(".").pop()?.toLowerCase(); // Get file extension
+    const arrayBuffer = await file.arrayBuffer(); // Read file as ArrayBuffer
+  
     if (fileExtension === "pdf") {
-      const arrayBuffer = await file.arrayBuffer();
       const uint8Array = new Uint8Array(arrayBuffer);
       const pdfDocument = await pdfjsLib.getDocument({ data: uint8Array }).promise;
       let resumeText = "";
-
+  
       for (let i = 1; i <= pdfDocument.numPages; i++) {
         const page = await pdfDocument.getPage(i);
         const pageContent = await page.getTextContent();
@@ -137,15 +137,15 @@ export default function CheckATS() {
       }
       return resumeText;
     } else if (fileExtension === "docx") {
-      const arrayBuffer = await file.arrayBuffer();
-      const docxBuffer = new Uint8Array(arrayBuffer);
-      const { value: resumeText } = await mammoth.extractRawText({ arrayBuffer: docxBuffer });
+      const uint8Array = new Uint8Array(arrayBuffer); // Convert ArrayBuffer to Uint8Array
+      const { value: resumeText } = await mammoth.extractRawText({
+        arrayBuffer: uint8Array.buffer, // Pass ArrayBuffer to mammoth
+      });
       return resumeText;
     } else {
       throw new Error("Unsupported file format. Please upload a PDF or DOCX file.");
     }
-  };
-  
+  };  
   const handleSubmit = async () => {
 
     setLoading(true);

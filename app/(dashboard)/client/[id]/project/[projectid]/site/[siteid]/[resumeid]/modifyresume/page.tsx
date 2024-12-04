@@ -39,7 +39,7 @@ export default function ModifyResume() {
 
   const extractText = async (base64FileContent: string, fileName: string) => {
     const fileExtension = fileName.split(".").pop()?.toLowerCase();
-    const arrayBuffer = Buffer.from(base64FileContent, "base64");
+    const arrayBuffer = Uint8Array.from(Buffer.from(base64FileContent, "base64")).buffer;
   
     if (fileExtension === "pdf") {
       const uint8Array = new Uint8Array(arrayBuffer);
@@ -54,14 +54,15 @@ export default function ModifyResume() {
       }
       return resumeText;
     } else if (fileExtension === "docx") {
+      const uint8Array = new Uint8Array(arrayBuffer); // Keep Uint8Array for further use
       const { value: resumeText } = await mammoth.extractRawText({
-        arrayBuffer,
+        arrayBuffer: uint8Array.buffer, // Pass the ArrayBuffer here
       });
       return resumeText;
     } else {
       throw new Error("Unsupported file format. Please upload a PDF or DOCX file.");
     }
-  };  
+  };    
 
   const transformresume = async () => {
     setLoading(true);
