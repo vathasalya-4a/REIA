@@ -7,31 +7,28 @@ export default async function SettingsPage() {
   const session = await getSession();
 
   if (!session) {
-    redirect("/login"); // Redirect if the user is not logged in
-  }
+    redirect("/login");   }
 
   return (
-    <div className="flex max-w-screen-xl flex-col space-y-12 p-8">
+    <div className="flex max-w-screen-xl flex-col space-y-12 p-14">
       <div className="flex flex-col space-y-6">
         <h1 className="font-cal text-3xl font-bold dark:text-white">Settings</h1>
 
         <Form
-          title="Name"
-          description="Your name on this app."
-          helpText="Please use 32 characters maximum."
-          inputAttrs={{
-            name: "name",
-            type: "text",
-            defaultValue: session.user.name ?? "",
-            placeholder: "Brendon Urie",
-            maxLength: 32,
-          }}
-          handleSubmit={(id: string, formData: FormData, key: string) =>
-            editUser(id, formData, key) // Pass all three arguments
-          }
-          id={session.user.id.toString()} // Pass the user ID as a string
-          idType="user" // Specify the correct idType
-        />
+  title="Name"
+  description="Your name on this app."
+  helpText="Please use 32 characters maximum."
+  inputAttrs={{
+    name: "name",
+    type: "text",
+    defaultValue: session.user.name ?? "",
+    placeholder: "Brendon Urie",
+    maxLength: 32,
+  }}
+  handleSubmit={editUser}
+  id={session.user.id} 
+  idType="user"
+/>
 
         <Form
           title="Email"
@@ -43,10 +40,8 @@ export default async function SettingsPage() {
             defaultValue: session.user.email ?? "",
             placeholder: "panic@thedis.co",
           }}
-          handleSubmit={(id: string, formData: FormData, key: string) =>
-            editUser(id, formData, key) // Pass all three arguments
-          }
-          id={session.user.id.toString()}
+          handleSubmit={editUser}
+          id={session.user.id} 
           idType="user"
         />
       </div>

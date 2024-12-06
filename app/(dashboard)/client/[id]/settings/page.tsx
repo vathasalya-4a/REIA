@@ -15,7 +15,7 @@ export default async function ClientSettingsIndex({
   });
 
   return (
-    <div className="flex flex-col space-y-6 p-10">
+    <div className="flex flex-col space-y-6 p-6">
       <Form
         title="Name"
         description="The name of your site. This will be used as the meta title on Google as well."

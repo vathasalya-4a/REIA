@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
           BASE_URL
         ).replace(
           /callbackUrl=http%3A%2F%2Flocalhost%3A3000/i,
-          `callbackUrl=${encodeURIComponent(BASE_URL + "/login")}`
+          `callbackUrl=${encodeURIComponent(BASE_URL)}`
         );
 
         console.log(environment);
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/login",
-    verifyRequest: "/login",
+    verifyRequest: "/clients",
     error: "/login",
   },
   adapter: PrismaAdapter(prisma),

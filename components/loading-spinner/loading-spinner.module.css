@@ -1,23 +1,29 @@
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+}
+
 .spinner {
   color: gray;
   display: inline-block;
   position: relative;
-  width: 70px;
-  height: 70px;
-  transform: scale(0.3) translateX(76px) translateY(-5px);
+  width: 50px; /* Increased width */
+  height: 50px; /* Increased height */
 }
 .spinner div {
-  transform-origin: 40px 40px;
+  transform-origin: 60px 60px; /* Adjusted for larger spinner */
   animation: spinner 1.2s linear infinite;
 }
 .spinner div:after {
   content: " ";
   display: block;
   position: absolute;
-  top: 5px;
-  left: 37px;
-  width: 6px;
-  height: 20px;
+  top: 10px; /* Adjusted for larger spinner */
+  left: 57px; /* Adjusted for larger spinner */
+  width: 12px; /* Increased size */
+  height: 40px; /* Increased size */
   border-radius: 20%;
   background: black;
 }

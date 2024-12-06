@@ -9,21 +9,21 @@ import va from "@vercel/analytics";
 import { deleteCandidate } from "../actions";
 
 export default function DeleteSiteForm({ siteName }: { siteName: string }) {
-  const { id } = useParams() as { id: string };
+  const { id, projectid, siteid } = useParams() as { id : string, projectid: string, siteid: string };
   const router = useRouter();
 
   return (
     <form
       action={async (data: FormData) => {
         if (window.confirm("Are you sure you want to delete your candidate?")) {
-          await deleteCandidate(parseInt(id))
+          await deleteCandidate(parseInt(siteid), data, "delete")
             .then(async (res: any) => {
               if (res.error) {
                 toast.error(res.error);
               } else {
                 va.track("Deleted candidate");
                 router.refresh();
-                router.push("/sites");
+                router.push(`/client/${id}/project/${projectid}`);
                 toast.success(`Successfully deleted candidate!`);
               }
             })

@@ -15,7 +15,7 @@ export default async function AuthLayout({ children }: { children: ReactNode }) 
 
   // If the user is authenticated, redirect them to the dashboard
   if (session) {
-    redirect("/dashboard");
+    redirect("/clients");
   }
 
   // Render the authentication layout for unauthenticated users

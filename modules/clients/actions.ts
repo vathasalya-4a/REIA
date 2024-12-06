@@ -46,36 +46,22 @@ export const createClient = async (formData: FormData) => {
   }
 };
 
-export const updateClient = async (id: string, formData: FormData) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return {
-      error: "Not authenticated",
-    };
-  }
-
-  const name = formData.get("name") as string | undefined;
-  const state = formData.get("state") as string | undefined;
+export const updateClient = async (id: string, formData: FormData, key: string) => {
+  const value = formData.get(key);
+  if (!value) return { error: `Invalid value for ${key}` };
 
   try {
     const response = await prisma.client.update({
-      where: {
-        id,
-      },
-      data: {
-        ...(name && { name }),
-        ...(state && { state }),
-      },
+      where: { id },
+      data: { [key]: value },
     });
-    revalidateTag("client");
-    return response;
-  } catch (error: any) {
-    console.log(error.message);
-    return {
-      error: error.message,
-    };
+    return { data: response };
+  } catch (error) {
+    console.error(error.message);
+    return { error: error.message };
   }
 };
+
 
 export const deleteClient = async (id: string, formData: FormData, action: string) => {
   const session = await getSession();

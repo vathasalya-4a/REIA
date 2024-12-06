@@ -55,7 +55,7 @@ export default function LoginButton() {
         await createCalcomUsername(email);
 
         setToastMessage("The login link has been sent, please check your email.");
-        router.push("/dashboard"); // Redirect to dashboard after successful sign-in
+        router.push("/login"); // Redirect to dashboard after successful sign-in
       } else {
         setToastMessage("Sign-in failed. Please try again.");
       }

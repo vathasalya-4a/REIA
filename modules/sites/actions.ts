@@ -1,20 +1,10 @@
 "use server";
 
+import prisma from "@/prisma";
 import { getSession } from "@/lib/auth";
 import { revalidateTag } from "next/cache";
-import { Site } from "@prisma/client";
-import {
-  addDomainToVercel,
-  removeDomainFromVercelProject,
-  validDomainRegex,
-} from "@/lib/domains";
-import { getBlurDataURL, nanoid } from "@/lib/utils";
-import { put } from "@vercel/blob";
-import prisma from "@/prisma";
-import { withSiteAuth } from "./auth";
 
 export const createSite = async (formData: FormData, projectId: string) => {
-  // Extract fields from formData
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const phone = formData.get("phone") as string;
@@ -24,11 +14,10 @@ export const createSite = async (formData: FormData, projectId: string) => {
   const salaryexpectations = parseInt(formData.get("salaryexpectations") as string, 10) || null;
   const availablehours = parseInt(formData.get("availablehours") as string, 10) || null;
   const documentsS3URL = formData.get("documentsS3URL") as string;
-  const image = formData.get("image") as string || undefined; // Optional
-  const imageBlurhash = formData.get("imageBlurhash") as string || undefined; // Optional
+  const image = formData.get("image") as string || undefined;
+  const imageBlurhash = formData.get("imageBlurhash") as string || undefined;
 
   try {
-    // Create a new candidate using Prisma
     const response = await prisma.candidate.create({
       data: {
         name,
@@ -44,13 +33,12 @@ export const createSite = async (formData: FormData, projectId: string) => {
         imageBlurhash,
         project: {
           connect: {
-            id: projectId, // Connect candidate to the project
+            id: projectId,
           },
         },
       },
     });
-
-    return response; // Return the created candidate object
+    return response;
   } catch (error: any) {
     console.error("Error creating candidate:", error.message);
     return {
@@ -59,47 +47,49 @@ export const createSite = async (formData: FormData, projectId: string) => {
   }
 };
 
-export const updateCandidate = async (id: number, data: any) => {
-  const session = await getSession();
-  if (!session?.user.id) {
-    return { error: "Not authenticated" };
-  }
-
+export const updateCandidate = async (id: number, formData: FormData) => {
   try {
-    const updatedCandidate = await prisma.candidate.update({
-      where: { id },
-      data: {
-        ...data, // Spread the data to dynamically update fields
-      },
+    const data: Record<string, any> = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
     });
 
-    revalidateTag(`/site/${id}`); // Revalidate cache for updated candidate
-    return updatedCandidate;
+    const updatedCandidate = await prisma.candidate.update({
+      where: { id },
+      data,
+    });
+
+    return { data: updatedCandidate };
   } catch (error: any) {
     console.error("Error updating candidate:", error.message);
     return { error: error.message };
   }
 };
 
-
-
-
-export const deleteCandidate = async (id: number) => {
+export const deleteCandidate = async (
+  id: number,
+  data: any,
+  action: string
+): Promise<{ success?: boolean; error?: string }> => {
   const session = await getSession();
   if (!session?.user.id) {
-    return { error: "Not authenticated" };
+    return { error: "Not authenticated" }; // Return an error if the user is not authenticated
   }
 
   try {
-    const deletedCandidate = await prisma.candidate.delete({
-      where: { id },
-    });
+    if (action === "delete") {
+      await prisma.candidate.delete({
+        where: { id },
+      });
 
-    revalidateTag(`/site/${id}`); // Revalidate cache for deleted candidate
-    return deletedCandidate;
+      revalidateTag(`/candidates`); // Revalidate cache for the candidates list
+      return { success: true }; // Return success response
+    }
+
+    return { error: "Invalid action" }; // Handle invalid action
   } catch (error: any) {
     console.error("Error deleting candidate:", error.message);
-    return { error: error.message };
+    return { error: error.message }; // Return the error message if something goes wrong
   }
 };
 

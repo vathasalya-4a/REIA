@@ -262,7 +262,7 @@ export default function CheckATS() {
 };   
 
   return (
-    <div className="overflow-y-auto resize-none custom-scrollbar p-6">
+    <div className="overflow-y-auto resize-none custom-scrollbar p-2">
 
       <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
         Upload Resume and Job Description

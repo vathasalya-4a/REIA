@@ -56,7 +56,7 @@ type DeleteProjectResponse =
   | { error: string }
   | { success: boolean };
 
-// Function to update a project
+  
 export const updateProject = async (id: string, formData: FormData) => {
   const session = await getSession();
   if (!session?.user.id) {
@@ -72,7 +72,6 @@ export const updateProject = async (id: string, formData: FormData) => {
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
 
-  // Extract fields from FormData
   const name = formData.get("name") as string | undefined;
   const cutumfield = formData.get("cutumfield") as string | undefined;
   const positiontype = formData.get("positiontype") as string | undefined;

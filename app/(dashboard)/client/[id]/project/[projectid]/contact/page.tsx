@@ -55,7 +55,7 @@ export default function Contact() {
     return (
         <div className="overflow-y-auto resize-none custom-scrollbar p-6 relative">
             <h1 className="mt-3 text-center font-cal text-3xl text-black-200">
-                Contact via Phone
+                Contact
             </h1>
             <div className="mt-6 mx-auto w-5/6 p-9 rounded-lg border border-stone-200 shadow-md transition-all hover:shadow-xl dark:border-stone-700 dark:hover:border-white">
                 <form

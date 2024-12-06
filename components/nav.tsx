@@ -75,7 +75,7 @@ export default function Nav({ children }: { children: ReactNode }) {
   }, [id]);
 
   const tabs = useMemo(() => {
-    if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "modifyresume" ) {
+    if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && resumeid && segments[7] === "modifyresume" ) {
       return [
         {
           name: "Back to All Resumes",
@@ -85,7 +85,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         {
           name: "Transform Resume",
           href: `/client/${id}/project/${projectid}/site/${siteid}/${resumeid}/modifyresume`,
-          isActive: segments[6] === "modifyresume",
+          isActive: segments[7] === "modifyresume",
           icon: <FileEdit width={18} />,
         },
       ];
@@ -104,62 +104,6 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <UploadCloudIcon width={18} />,
         },
       ];
-    }else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "contact"  ) {
-      return [
-        {
-          name: "Back to All Candidates",
-          href: `/client/${id}/project/${projectid}`,
-          icon: <ArrowLeft width={18} />,
-        },
-        {
-          name: "Resumes",
-          href: `/client/${id}/project/${projectid}/site/${siteid}`,
-          icon: <UploadCloudIcon width={18} />,
-        },
-        {
-          name: "Interview",
-          href: `/client/${id}/project/${projectid}/site/${siteid}/candidate-interview`,
-          icon: <MessageCircle width={18} />,
-        },
-        {
-          name: "Contact",
-          href: `/client/${id}/project/${projectid}/site/${siteid}/contact`,
-          isActive: segments[6] === "contact",
-          icon: <ContactIcon width={18} />,
-        },
-        {
-          name: "Settings",
-          href: `/client/${id}/settings`,
-          isActive: segments.includes("settings"),
-          icon: <Settings width={18} />,
-        },
-      ];
-    }
-    else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid && segments[6] === "candidate-interview"  ) {
-      return [
-        {
-          name: "Back to All Candidates",
-          href: `/client/${id}/project/${projectid}`,
-          icon: <ArrowLeft width={18} />,
-        },
-        {
-          name: "Resumes",
-          href: `/client/${id}/project/${projectid}/site/${siteid}`,
-          icon: <UploadCloudIcon width={18} />,
-        },
-        {
-          name: "Interview",
-          href: `/client/${id}/project/${projectid}/site/${siteid}/candidate-interview`,
-          isActive: segments[6] === "candidate-interview",
-          icon: <MessageCircle width={18} />,
-        },
-        {
-          name: "Settings",
-          href: `/client/${id}/settings`,
-          isActive: segments.includes("settings"),
-          icon: <Settings width={18} />,
-        },
-      ];
     }
     else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "site" && siteid ) {
       return [
@@ -171,12 +115,13 @@ export default function Nav({ children }: { children: ReactNode }) {
         {
           name: "Resumes",
           href: `/client/${id}/project/${projectid}/site/${siteid}`,
-          isActive: segments[4] === "site",
+          isActive: segments.length === 6,
           icon: <UploadCloudIcon width={18} />,
         },
         {
           name: "Interview",
           href: `/client/${id}/project/${projectid}/site/${siteid}/candidate-interview`,
+          isActive: segments.includes("candidate-interview"),
           icon: <MessageCircle width={18} />,
         },
         {
@@ -186,39 +131,7 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
         },
       ];
-    }else if (segments[0] === "client" && id && segments[2] === "project" && projectid && segments[4] === "interview") {
-      return [
-        {
-          name: "Back to All Projects",
-          href: `/client/${id}`, 
-          icon: <ArrowLeft width={18} />,
-        },
-        {
-          name: "Candidates",
-          href: `/client/${id}/project/${projectid}`, 
-          isActive: segments.length === 4,
-          icon: <Newspaper width={18} />,
-        },
-        {
-          name: "AI Interview",
-          href: `/client/${id}/project/${projectid}/interview`,
-          isActive: segments.length === 5,
-          icon: <MessageCircle width={18} />,
-        },
-        {
-          name: "Contact",
-          href: `/client/${id}/project/${projectid}/contact`,
-          isActive: segments.includes("contact"),
-          icon: <ContactIcon width={18} />,
-        },
-        {
-          name: "Settings",
-          href: `/client/${id}/settings`,
-          isActive: segments.includes("settings"),
-          icon: <Settings width={18} />,
-        }
-      ];
-    }   
+    }
     else if (segments[0] === "client" && id && segments[2] === "project" && projectid) {
       return [
         {
@@ -262,7 +175,7 @@ export default function Nav({ children }: { children: ReactNode }) {
         {
           name: "Projects",
           href: `/client/${id}`,
-          isActive: segments.length === 2,
+          isActive: segments.length == 2,
           icon: <Newspaper width={18} />,
         },
         {
@@ -272,32 +185,12 @@ export default function Nav({ children }: { children: ReactNode }) {
           icon: <Settings width={18} />,
         },
       ];
-    } else if (segments[0] === "post" && id) {
-      return [
-        {
-          name: "Back to All Posts",
-          href: siteId ? `/site/${siteId}` : "/sites",
-          icon: <ArrowLeft width={18} />,
-        },
-        {
-          name: "Editor",
-          href: `/post/${id}`,
-          isActive: segments.length === 2,
-          icon: <Edit3 width={18} />,
-        },
-        {
-          name: "Settings",
-          href: `/post/${id}/settings`,
-          isActive: segments.includes("settings"),
-          icon: <Settings width={18} />,
-        },
-      ];
     }
     return [
       {
         name: "Clients",
         href: "/clients",
-        isActive: segments[0] === "clients" || segments.length === 0,
+        isActive: segments[0] === "clients",
         icon: <User width={18} />,
       },
       {

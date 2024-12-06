@@ -114,9 +114,9 @@ export default function AIInterview() {
     };
 
     return (
-        <div className="overflow-y-auto resize-none custom-scrollbar p-6 relative">
+        <div className="overflow-y-auto resize-none custom-scrollbar p-2 relative">
             {loading ? (
-                <div className="flex justify-center items-center mt-8">
+                <div className="flex justify-center items-center mt-6">
                     <LoadingDots />
                 </div>
             ) : (

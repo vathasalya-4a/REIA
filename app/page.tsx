@@ -1,22 +1,18 @@
-// app/page.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import LoadingSpinner from "@/components/loading-spinner";
 
 export default function HomePageRedirect() {
   const { data: session, status } = useSession();
+  console.log(status);
 
   if (status === "loading") {
-    // Handle loading state, e.g., show a loading spinner
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
-
   if (status === "authenticated") {
-    // User is authenticated, redirect to the dashboard page
-    redirect("/dashboard");
+    redirect("/clients");
   }
-
-  // User is not authenticated, redirect to the marketing page
   redirect("/marketing");
 }
