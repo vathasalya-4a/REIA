@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import LoadingCircle from "@/components/icons/loading-circle";
 
 interface InterviewDetailsProps {
     details: {
@@ -10,12 +12,18 @@ interface InterviewDetailsProps {
         aiFeedback?: string;
         interviewTranscript?: Array<{ role: "user" | "assistant"; content: string }>;
         audioFileName?: string;
+        screenshots?: string[];
     };
 }
 
 const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [loadingAudio, setLoadingAudio] = useState<boolean>(false);
+    const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
+    const [loadingScreenshot, setLoadingScreenshot] = useState<boolean>(false);
+    const [screenshotUrls, setScreenshotUrls] = useState<string[]>([]);
+
+    const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
 
     const calculateTimeAgo = (timestamp?: string) => {
         if (!timestamp) return "Unknown time";
@@ -24,8 +32,6 @@ const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
         const diffInHours = Math.floor((now.getTime() - interviewTime.getTime()) / (1000 * 60 * 60));
         return `${diffInHours} hours ago`;
     };
-
-    const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN;
 
     const fetchAudioFile = async (audioFileName: string) => {
         if (!API_TOKEN) {
@@ -52,17 +58,66 @@ const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
         } finally {
             setLoadingAudio(false);
         }
-    };    
+    };
 
-    React.useEffect(() => {
+    const fetchScreenshots = async () => {
+        if (!API_TOKEN || !details.screenshots) {
+            console.error("API token or screenshot data is missing.");
+            return;
+        }
+
+        setLoadingScreenshot(true);
+        try {
+            const urls = await Promise.all(
+                details.screenshots.map(async (fileName) => {
+                    const response = await fetch(
+                        `https://recrooai.com/api/ext/get/screenshot/${fileName}`,
+                        {
+                            headers: { authorization: API_TOKEN },
+                        }
+                    );
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        return URL.createObjectURL(blob);
+                    } else {
+                        console.error(`Failed to fetch screenshot: ${fileName}`);
+                        return "";
+                    }
+                })
+            );
+            setScreenshotUrls(urls.filter((url) => url));
+        } catch (error) {
+            console.error("Error fetching screenshots:", error);
+        } finally {
+            setLoadingScreenshot(false);
+        }
+    };
+
+    useEffect(() => {
         if (details.audioFileName) {
             fetchAudioFile(details.audioFileName);
         }
-    }, [details.audioFileName]);
+        if (details.screenshots && details.screenshots.length > 0) {
+            fetchScreenshots();
+        }
+    }, [details.audioFileName, details.screenshots]);
+
+    const handleNextScreenshot = () => {
+        if (screenshotUrls.length > 0) {
+            setCurrentScreenshotIndex((prevIndex) => (prevIndex + 1) % screenshotUrls.length);
+        }
+    };
+
+    const handlePrevScreenshot = () => {
+        if (screenshotUrls.length > 0) {
+            setCurrentScreenshotIndex((prevIndex) =>
+                (prevIndex - 1 + screenshotUrls.length) % screenshotUrls.length
+            );
+        }
+    };
 
     return (
         <div className="space-y-6 max-w-4xl mx-auto mt-2">
-            {/* Header Section */}
             <div className="space-y-2 text-center">
                 <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">
                     {details.firstName || "First Name"} {details.lastName || "Last Name"}
@@ -76,11 +131,10 @@ const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
                     <strong>Rating:</strong>{" "}
                     {details.rating !== undefined ? `${details.rating}/5` : "No rating available"}
                 </p>
-                </div>
-    
+            </div>
+
             {/* Feedback Section */}
             <div className="border text-center rounded-lg p-4 shadow-md bg-white dark:bg-gray-800">
-            <div>
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">AI Feedback</h3>
                 <textarea
                     readOnly
@@ -89,8 +143,44 @@ const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
                     value={details.aiFeedback || "No AI feedback provided"}
                 />
             </div>
-            </div>
-    
+
+            {/* Screenshots Section */}
+            {screenshotUrls.length > 0 && (
+                <div className="border text-center rounded-lg p-4 shadow-md bg-white dark:bg-gray-800">
+                    <div className="relative flex items-center justify-center">
+                        <button
+                            onClick={handlePrevScreenshot}
+                            className="absolute left-4 top-1/2 transform -translate-y-1/2 cursor-pointer bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full p-2 shadow-md hover:bg-gray-400 dark:hover:bg-gray-600"
+                            aria-label="Previous Screenshot"
+                            disabled={loadingScreenshot}
+                        >
+                            <ChevronLeft size={24} />
+                        </button>
+
+                        <div className="flex items-center justify-center h-[300px] w-full">
+                            {loadingScreenshot ? (
+                                <LoadingCircle dimensions="h-10 w-10" />
+                            ) : (
+                                <img
+                                    src={screenshotUrls[currentScreenshotIndex]}
+                                    alt={`Screenshot ${currentScreenshotIndex + 1}`}
+                                    className="w-full max-h-[300px] object-contain"
+                                />
+                            )}
+                        </div>
+
+                        <button
+                            onClick={handleNextScreenshot}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full p-2 shadow-md hover:bg-gray-400 dark:hover:bg-gray-600"
+                            aria-label="Next Screenshot"
+                            disabled={loadingScreenshot}
+                        >
+                            <ChevronRight size={24} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Interview Conversation Section */}
             <div className="border text-center rounded-lg p-4 shadow-md bg-white dark:bg-gray-800">
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
@@ -118,22 +208,22 @@ const InterviewDetails: React.FC<InterviewDetailsProps> = ({ details }) => {
                     )}
                 </div>
             </div>
-    
+
             {/* Audio Player Section */}
             <div className="border text-center rounded-lg p-4 shadow-md bg-white dark:bg-gray-800">
-            <div className="text-center">
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Audio</h3>
-                <audio
-                    controls
-                    className={`w-full ${
-                        audioUrl ? "opacity-100" : "opacity-50 pointer-events-none"
-                    }`}
-                >
-                    {audioUrl && <source src={audioUrl} type="audio/mpeg" />}
-                    Your browser does not support the audio element.
-                </audio>
+                <div className="text-center">
+                    <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">Audio</h3>
+                    <audio
+                        controls
+                        className={`w-full ${
+                            audioUrl ? "opacity-100" : "opacity-50 pointer-events-none"
+                        }`}
+                    >
+                        {audioUrl && <source src={audioUrl} type="audio/mpeg" />}
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
             </div>
-        </div>
         </div>
     );
 };

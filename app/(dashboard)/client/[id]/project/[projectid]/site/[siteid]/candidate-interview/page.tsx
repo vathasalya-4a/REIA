@@ -47,7 +47,7 @@ export default function CandidateInterview({ params }: CandidateInterviewProps) 
             setcandidateinterview(false);
             return;
         }
-        setInterviewLoading(true); // Start interview-specific loading
+        setInterviewLoading(true);
         try {
             const response = await fetch(
                 `https://recrooai.com/api/ext/get/candidate/${email}`,
@@ -57,6 +57,7 @@ export default function CandidateInterview({ params }: CandidateInterviewProps) 
             );
             if (response.ok) {
                 const interviewDetails = await response.json();
+                console.log(interviewDetails);
                 if (interviewDetails.data) {
                     setcandidateinterview(true);
                     setinterviewdetails(interviewDetails.data);
